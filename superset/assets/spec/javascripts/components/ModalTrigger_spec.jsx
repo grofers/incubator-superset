@@ -28,6 +28,8 @@ describe('ModalTrigger', () => {
   };
 
   it('is a valid element', () => {
-    expect(React.isValidElement(<ModalTrigger {...defaultProps} />)).toBe(true);
+    expect(
+      React.isValidElement(<ModalTrigger {...defaultProps} />),
+    ).toBe(true);
   });
 });

@@ -31,7 +31,9 @@ export default function AdhocMetricStaticOption({ adhocMetric, showType }) {
   return (
     <div>
       {showType && <ColumnTypeLabel type="expression" />}
-      <span className="m-r-5 option-label">{adhocMetric.label}</span>
+      <span className="m-r-5 option-label">
+        {adhocMetric.label}
+      </span>
     </div>
   );
 }

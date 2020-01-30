@@ -27,7 +27,10 @@ import savedMetricType from '../propTypes/savedMetricType';
 import adhocMetricType from '../propTypes/adhocMetricType';
 
 const propTypes = {
-  option: PropTypes.oneOfType([savedMetricType, adhocMetricType]).isRequired,
+  option: PropTypes.oneOfType([
+    savedMetricType,
+    adhocMetricType,
+  ]).isRequired,
   onMetricEdit: PropTypes.func,
   columns: PropTypes.arrayOf(columnType),
   multi: PropTypes.bool,
@@ -42,7 +45,9 @@ export default function MetricDefinitionValue({
   datasourceType,
 }) {
   if (option.metric_name) {
-    return <MetricOption metric={option} />;
+    return (
+      <MetricOption metric={option} />
+    );
   } else if (option instanceof AdhocMetric) {
     return (
       <AdhocMetricOption

@@ -25,7 +25,9 @@ export default {
     {
       label: t('Time Series Options'),
       expanded: true,
-      controlSetRows: [['time_series_option']],
+      controlSetRows: [
+        ['time_series_option'],
+      ],
     },
     {
       label: t('Chart Options'),

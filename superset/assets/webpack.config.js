@@ -19,8 +19,7 @@
 const os = require('os');
 const path = require('path');
 const webpack = require('webpack');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
@@ -78,12 +77,10 @@ if (isDevMode) {
   plugins.push(new webpack.HotModuleReplacementPlugin());
 } else {
   // text loading (webpack 4+)
-  plugins.push(
-    new MiniCssExtractPlugin({
-      filename: '[name].[chunkhash].entry.css',
-      chunkFilename: '[name].[chunkhash].chunk.css',
-    }),
-  );
+  plugins.push(new MiniCssExtractPlugin({
+    filename: '[name].[chunkhash].entry.css',
+    chunkFilename: '[name].[chunkhash].chunk.css',
+  }));
   plugins.push(new OptimizeCSSAssetsPlugin());
 }
 
@@ -100,7 +97,10 @@ if (isDevMode) {
   output.chunkFilename = '[name].[chunkhash].chunk.js';
 }
 
-const PREAMBLE = ['babel-polyfill', path.join(APP_DIR, '/src/preamble.js')];
+const PREAMBLE = [
+  'babel-polyfill',
+  path.join(APP_DIR, '/src/preamble.js'),
+];
 
 function addPreamble(entry) {
   return PREAMBLE.concat([path.join(APP_DIR, entry)]);
@@ -160,7 +160,7 @@ const config = {
           {
             loader: 'thread-loader',
             options: {
-              // there should be 1 cpu for the fork-ts-checker-webpack-plugin
+                // there should be 1 cpu for the fork-ts-checker-webpack-plugin
               workers: os.cpus().length - 1,
             },
           },
@@ -190,26 +190,20 @@ const config = {
             loader: 'babel-loader',
             options: {
               presets: ['airbnb', '@babel/preset-react', '@babel/preset-env'],
-              plugins: [
-                'lodash',
-                '@babel/plugin-syntax-dynamic-import',
-                'react-hot-loader/babel',
-              ],
+              plugins: ['lodash', '@babel/plugin-syntax-dynamic-import', 'react-hot-loader/babel'],
             },
           },
         ],
       },
       {
         test: /\.css$/,
-        include: [APP_DIR, /superset[-]ui.+\/src/],
+        include: [
+          APP_DIR,
+          /superset[-]ui.+\/src/,
+        ],
         use: [
           isDevMode ? 'style-loader' : MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: isDevMode,
-            },
-          },
+          'css-loader',
         ],
       },
       {
@@ -217,18 +211,8 @@ const config = {
         include: APP_DIR,
         use: [
           isDevMode ? 'style-loader' : MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: isDevMode,
-            },
-          },
-          {
-            loader: 'less-loader',
-            options: {
-              sourceMap: isDevMode,
-            },
-          },
+          'css-loader',
+          'less-loader',
         ],
       },
       /* for css linking images */

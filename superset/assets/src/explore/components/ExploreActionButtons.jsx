@@ -28,20 +28,14 @@ import { exportChart, getExploreLongUrl } from '../exploreUtils';
 
 const propTypes = {
   actions: PropTypes.object.isRequired,
-  canDownload: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
-    .isRequired,
+  canDownload: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
   chartStatus: PropTypes.string,
   latestQueryFormData: PropTypes.object,
   queryResponse: PropTypes.object,
 };
 
 export default function ExploreActionButtons({
-  actions,
-  canDownload,
-  chartStatus,
-  latestQueryFormData,
-  queryResponse,
-}) {
+    actions, canDownload, chartStatus, latestQueryFormData, queryResponse }) {
   const exportToCSVClasses = cx('btn btn-default btn-sm', {
     'disabled disabledButton': !canDownload,
   });
@@ -50,19 +44,18 @@ export default function ExploreActionButtons({
 
   return (
     <div className="btn-group results" role="group">
-      {latestQueryFormData && (
+      {latestQueryFormData &&
         <URLShortLinkButton
           url={getExploreLongUrl(latestQueryFormData)}
           emailSubject="Superset Chart"
           emailContent="Check out this chart: "
         />
-      )}
+      }
 
-      {latestQueryFormData && (
-        <EmbedCodeButton latestQueryFormData={latestQueryFormData} />
-      )}
+      {latestQueryFormData &&
+        <EmbedCodeButton latestQueryFormData={latestQueryFormData} />}
 
-      {latestQueryFormData && (
+      {latestQueryFormData &&
         <a
           onClick={doExportChart}
           className="btn btn-default btn-sm"
@@ -71,9 +64,8 @@ export default function ExploreActionButtons({
           rel="noopener noreferrer"
         >
           <i className="fa fa-file-code-o" /> .json
-        </a>
-      )}
-      {latestQueryFormData && (
+        </a>}
+      {latestQueryFormData &&
         <a
           onClick={doExportCSV}
           className={exportToCSVClasses}
@@ -82,8 +74,7 @@ export default function ExploreActionButtons({
           rel="noopener noreferrer"
         >
           <i className="fa fa-file-text-o" /> .csv
-        </a>
-      )}
+        </a>}
       <DisplayQueryButton
         queryResponse={queryResponse}
         latestQueryFormData={latestQueryFormData}

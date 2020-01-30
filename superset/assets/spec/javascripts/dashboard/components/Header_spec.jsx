@@ -31,12 +31,7 @@ describe('Header', () => {
   const props = {
     addSuccessToast: () => {},
     addDangerToast: () => {},
-    dashboardInfo: {
-      id: 1,
-      dash_edit_perm: true,
-      dash_save_perm: true,
-      userId: 1,
-    },
+    dashboardInfo: { id: 1, dash_edit_perm: true, dash_save_perm: true },
     dashboardTitle: 'title',
     charts: {},
     layout: {},
@@ -68,8 +63,6 @@ describe('Header', () => {
     redoLength: 0,
     setMaxUndoHistoryExceeded: () => {},
     maxUndoHistoryToast: () => {},
-    dashboardInfoChanged: () => {},
-    dashboardTitleChanged: () => {},
   };
 
   function setup(overrideProps) {
@@ -79,12 +72,7 @@ describe('Header', () => {
 
   describe('read-only-user', () => {
     const overrideProps = {
-      dashboardInfo: {
-        id: 1,
-        dash_edit_perm: false,
-        dash_save_perm: false,
-        userId: 1,
-      },
+      dashboardInfo: { id: 1, dash_edit_perm: false, dash_save_perm: false },
     };
 
     it('should render the EditableTitle', () => {
@@ -121,12 +109,7 @@ describe('Header', () => {
   describe('write-user', () => {
     const overrideProps = {
       editMode: false,
-      dashboardInfo: {
-        id: 1,
-        dash_edit_perm: true,
-        dash_save_perm: true,
-        userId: 1,
-      },
+      dashboardInfo: { id: 1, dash_edit_perm: true, dash_save_perm: true },
     };
 
     it('should render the EditableTitle', () => {
@@ -163,12 +146,7 @@ describe('Header', () => {
   describe('write-user-with-edit-mode', () => {
     const overrideProps = {
       editMode: true,
-      dashboardInfo: {
-        id: 1,
-        dash_edit_perm: true,
-        dash_save_perm: true,
-        userId: 1,
-      },
+      dashboardInfo: { id: 1, dash_edit_perm: true, dash_save_perm: true },
     };
 
     it('should render the EditableTitle', () => {
@@ -199,47 +177,6 @@ describe('Header', () => {
     it('should set up undo/redo', () => {
       const wrapper = setup(overrideProps);
       expect(wrapper.find(UndoRedoKeylisteners)).toHaveLength(1);
-    });
-  });
-
-  describe('logged-out-user', () => {
-    const overrideProps = {
-      dashboardInfo: {
-        id: 1,
-        dash_edit_perm: false,
-        dash_save_perm: false,
-        userId: null,
-      },
-    };
-
-    it('should render the EditableTitle', () => {
-      const wrapper = setup(overrideProps);
-      expect(wrapper.find(EditableTitle)).toHaveLength(1);
-    });
-
-    it('should render the PublishedStatus', () => {
-      const wrapper = setup(overrideProps);
-      expect(wrapper.find(PublishedStatus)).toHaveLength(1);
-    });
-
-    it('should not render the FaveStar', () => {
-      const wrapper = setup(overrideProps);
-      expect(wrapper.find(FaveStar)).toHaveLength(0);
-    });
-
-    it('should render the HeaderActionsDropdown', () => {
-      const wrapper = setup(overrideProps);
-      expect(wrapper.find(HeaderActionsDropdown)).toHaveLength(1);
-    });
-
-    it('should render one Button', () => {
-      const wrapper = setup(overrideProps);
-      expect(wrapper.find(Button)).toHaveLength(1);
-    });
-
-    it('should not set up undo/redo', () => {
-      const wrapper = setup(overrideProps);
-      expect(wrapper.find(UndoRedoKeylisteners)).toHaveLength(0);
     });
   });
 });

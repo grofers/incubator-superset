@@ -19,10 +19,7 @@
 import sinon from 'sinon';
 
 import URI from 'urijs';
-import {
-  getExploreUrlAndPayload,
-  getExploreLongUrl,
-} from '../../../src/explore/exploreUtils';
+import { getExploreUrlAndPayload, getExploreLongUrl } from '../../../src/explore/exploreUtils';
 import * as hostNamesConfig from '../../../src/utils/hostNamesConfig';
 
 describe('exploreUtils', () => {
@@ -47,7 +44,10 @@ describe('exploreUtils', () => {
         force: false,
         curUrl: 'http://superset.com',
       });
-      compareURI(URI(url), URI('/superset/explore/'));
+      compareURI(
+        URI(url),
+        URI('/superset/explore/'),
+      );
       expect(payload).toEqual(formData);
     });
     it('generates proper json url', () => {
@@ -57,7 +57,10 @@ describe('exploreUtils', () => {
         force: false,
         curUrl: 'http://superset.com',
       });
-      compareURI(URI(url), URI('/superset/explore_json/'));
+      compareURI(
+        URI(url),
+        URI('/superset/explore_json/'),
+      );
       expect(payload).toEqual(formData);
     });
     it('generates proper json forced url', () => {
@@ -69,7 +72,8 @@ describe('exploreUtils', () => {
       });
       compareURI(
         URI(url),
-        URI('/superset/explore_json/').search({ force: 'true' }),
+        URI('/superset/explore_json/')
+          .search({ force: 'true' }),
       );
       expect(payload).toEqual(formData);
     });
@@ -82,7 +86,8 @@ describe('exploreUtils', () => {
       });
       compareURI(
         URI(url),
-        URI('/superset/explore_json/').search({ csv: 'true' }),
+        URI('/superset/explore_json/')
+          .search({ csv: 'true' }),
       );
       expect(payload).toEqual(formData);
     });
@@ -95,7 +100,8 @@ describe('exploreUtils', () => {
       });
       compareURI(
         URI(url),
-        URI('/superset/explore/').search({ standalone: 'true' }),
+        URI('/superset/explore/')
+          .search({ standalone: 'true' }),
       );
       expect(payload).toEqual(formData);
     });
@@ -108,7 +114,8 @@ describe('exploreUtils', () => {
       });
       compareURI(
         URI(url),
-        URI('/superset/explore_json/').search({ foo: 'bar' }),
+        URI('/superset/explore_json/')
+          .search({ foo: 'bar' }),
       );
       expect(payload).toEqual(formData);
     });
@@ -121,7 +128,8 @@ describe('exploreUtils', () => {
       });
       compareURI(
         URI(url),
-        URI('/superset/explore_json/').search({ foo: 'bar' }),
+        URI('/superset/explore_json/')
+          .search({ foo: 'bar' }),
       );
       expect(payload).toEqual(formData);
     });
@@ -134,7 +142,8 @@ describe('exploreUtils', () => {
       });
       compareURI(
         URI(url),
-        URI('/superset/explore_json/').search({ foo: 'bar' }),
+        URI('/superset/explore_json/')
+          .search({ foo: 'bar' }),
       );
       expect(payload).toEqual(formData);
     });
@@ -144,14 +153,10 @@ describe('exploreUtils', () => {
     let stub;
     const availableDomains = [
       'http://localhost/',
-      'domain1.com',
-      'domain2.com',
-      'domain3.com',
+      'domain1.com', 'domain2.com', 'domain3.com',
     ];
     beforeEach(() => {
-      stub = sinon
-        .stub(hostNamesConfig, 'availableDomains')
-        .value(availableDomains);
+      stub = sinon.stub(hostNamesConfig, 'availableDomains').value(availableDomains);
     });
     afterEach(() => {
       stub.restore();

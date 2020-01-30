@@ -39,7 +39,6 @@ import {
 } from '../../../../src/dashboard/actions/dashboardLayout';
 
 import { setUnsavedChanges } from '../../../../src/dashboard/actions/dashboardState';
-import * as dashboardFilters from '../../../../src/dashboard/actions/dashboardFilters';
 import {
   addWarningToast,
   ADD_TOAST,
@@ -81,12 +80,6 @@ describe('dashboardLayout actions', () => {
 
     return { getState, dispatch, state };
   }
-  beforeEach(() => {
-    sinon.spy(dashboardFilters, 'updateLayoutComponents');
-  });
-  afterEach(() => {
-    dashboardFilters.updateLayoutComponents.restore();
-  });
 
   describe('updateComponents', () => {
     it('should dispatch an updateLayout action', () => {
@@ -99,9 +92,6 @@ describe('dashboardLayout actions', () => {
         type: UPDATE_COMPONENTS,
         payload: { nextComponents },
       });
-
-      // update component should not trigger action for dashboardFilters
-      expect(dashboardFilters.updateLayoutComponents.callCount).toEqual(0);
     });
 
     it('should dispatch a setUnsavedChanges action if hasUnsavedChanges=false', () => {
@@ -111,10 +101,8 @@ describe('dashboardLayout actions', () => {
       const nextComponents = { 1: {} };
       const thunk = updateComponents(nextComponents);
       thunk(dispatch, getState);
+      expect(dispatch.callCount).toBe(2);
       expect(dispatch.getCall(1).args[0]).toEqual(setUnsavedChanges(true));
-
-      // update component should not trigger action for dashboardFilters
-      expect(dashboardFilters.updateLayoutComponents.callCount).toEqual(0);
     });
   });
 
@@ -123,13 +111,11 @@ describe('dashboardLayout actions', () => {
       const { getState, dispatch } = setup();
       const thunk = deleteComponent('id', 'parentId');
       thunk(dispatch, getState);
+      expect(dispatch.callCount).toBe(1);
       expect(dispatch.getCall(0).args[0]).toEqual({
         type: DELETE_COMPONENT,
         payload: { id: 'id', parentId: 'parentId' },
       });
-
-      // delete components should trigger action for dashboardFilters
-      expect(dashboardFilters.updateLayoutComponents.callCount).toEqual(1);
     });
 
     it('should dispatch a setUnsavedChanges action if hasUnsavedChanges=false', () => {
@@ -138,10 +124,8 @@ describe('dashboardLayout actions', () => {
       });
       const thunk = deleteComponent('id', 'parentId');
       thunk(dispatch, getState);
-      expect(dispatch.getCall(2).args[0]).toEqual(setUnsavedChanges(true));
-
-      // delete components should trigger action for dashboardFilters
-      expect(dashboardFilters.updateLayoutComponents.callCount).toEqual(1);
+      expect(dispatch.callCount).toBe(2);
+      expect(dispatch.getCall(1).args[0]).toEqual(setUnsavedChanges(true));
     });
   });
 
@@ -165,8 +149,7 @@ describe('dashboardLayout actions', () => {
         },
       });
 
-      // update dashboard title should not trigger action for dashboardFilters
-      expect(dashboardFilters.updateLayoutComponents.callCount).toEqual(0);
+      expect(dispatch.callCount).toBe(2);
     });
   });
 
@@ -176,13 +159,11 @@ describe('dashboardLayout actions', () => {
       const dropResult = {};
       const thunk = createTopLevelTabs(dropResult);
       thunk(dispatch, getState);
+      expect(dispatch.callCount).toBe(1);
       expect(dispatch.getCall(0).args[0]).toEqual({
         type: CREATE_TOP_LEVEL_TABS,
         payload: { dropResult },
       });
-
-      // create top level tabs should trigger action for dashboardFilters
-      expect(dashboardFilters.updateLayoutComponents.callCount).toEqual(1);
     });
 
     it('should dispatch a setUnsavedChanges action if hasUnsavedChanges=false', () => {
@@ -192,10 +173,8 @@ describe('dashboardLayout actions', () => {
       const dropResult = {};
       const thunk = createTopLevelTabs(dropResult);
       thunk(dispatch, getState);
-      expect(dispatch.getCall(2).args[0]).toEqual(setUnsavedChanges(true));
-
-      // create top level tabs should trigger action for dashboardFilters
-      expect(dashboardFilters.updateLayoutComponents.callCount).toEqual(1);
+      expect(dispatch.callCount).toBe(2);
+      expect(dispatch.getCall(1).args[0]).toEqual(setUnsavedChanges(true));
     });
   });
 
@@ -205,13 +184,11 @@ describe('dashboardLayout actions', () => {
       const dropResult = {};
       const thunk = deleteTopLevelTabs(dropResult);
       thunk(dispatch, getState);
+      expect(dispatch.callCount).toBe(1);
       expect(dispatch.getCall(0).args[0]).toEqual({
         type: DELETE_TOP_LEVEL_TABS,
         payload: {},
       });
-
-      // delete top level tabs should trigger action for dashboardFilters
-      expect(dashboardFilters.updateLayoutComponents.callCount).toEqual(1);
     });
 
     it('should dispatch a setUnsavedChanges action if hasUnsavedChanges=false', () => {
@@ -221,10 +198,8 @@ describe('dashboardLayout actions', () => {
       const dropResult = {};
       const thunk = deleteTopLevelTabs(dropResult);
       thunk(dispatch, getState);
-      expect(dispatch.getCall(2).args[0]).toEqual(setUnsavedChanges(true));
-
-      // delete top level tabs should trigger action for dashboardFilters
-      expect(dashboardFilters.updateLayoutComponents.callCount).toEqual(1);
+      expect(dispatch.callCount).toBe(2);
+      expect(dispatch.getCall(1).args[0]).toEqual(setUnsavedChanges(true));
     });
   });
 
@@ -286,9 +261,6 @@ describe('dashboardLayout actions', () => {
       thunk2(dispatch, getState);
 
       expect(dispatch.callCount).toBe(3);
-
-      // resize components should not trigger action for dashboardFilters
-      expect(dashboardFilters.updateLayoutComponents.callCount).toEqual(0);
     });
   });
 
@@ -314,8 +286,7 @@ describe('dashboardLayout actions', () => {
         },
       });
 
-      // create components should trigger action for dashboardFilters
-      expect(dashboardFilters.updateLayoutComponents.callCount).toEqual(1);
+      expect(dispatch.callCount).toBe(2);
     });
 
     it('should move a component if the component is not new', () => {
@@ -344,8 +315,7 @@ describe('dashboardLayout actions', () => {
         },
       });
 
-      // create components should trigger action for dashboardFilters
-      expect(dashboardFilters.updateLayoutComponents.callCount).toEqual(1);
+      expect(dispatch.callCount).toBe(2);
     });
 
     it('should dispatch a toast if the drop overflows the destination', () => {
@@ -409,6 +379,9 @@ describe('dashboardLayout actions', () => {
           parentId: 'parentId',
         },
       });
+
+      // move thunk, delete thunk, delete result actions
+      expect(dispatch.callCount).toBe(3);
     });
 
     it('should create top-level tabs if dropped on root', () => {
@@ -431,6 +404,8 @@ describe('dashboardLayout actions', () => {
           dropResult,
         },
       });
+
+      expect(dispatch.callCount).toBe(2);
     });
 
     it('should dispatch a toast if drop top-level tab into nested tab', () => {
@@ -522,10 +497,8 @@ describe('dashboardLayout actions', () => {
       const thunk = redoLayoutAction();
       thunk(dispatch, getState);
 
+      expect(dispatch.callCount).toBe(1);
       expect(dispatch.getCall(0).args[0]).toEqual(UndoActionCreators.redo());
-
-      // redo/undo should trigger action for dashboardFilters
-      expect(dashboardFilters.updateLayoutComponents.callCount).toEqual(1);
     });
 
     it('should dispatch a setUnsavedChanges(true) action if hasUnsavedChanges=false', () => {
@@ -534,10 +507,9 @@ describe('dashboardLayout actions', () => {
       });
       const thunk = redoLayoutAction();
       thunk(dispatch, getState);
-      expect(dispatch.getCall(2).args[0]).toEqual(setUnsavedChanges(true));
 
-      // redo/undo should trigger action for dashboardFilters
-      expect(dashboardFilters.updateLayoutComponents.callCount).toEqual(1);
+      expect(dispatch.callCount).toBe(2);
+      expect(dispatch.getCall(1).args[0]).toEqual(setUnsavedChanges(true));
     });
   });
 });

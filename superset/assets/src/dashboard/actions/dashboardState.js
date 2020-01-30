@@ -38,10 +38,6 @@ import {
   addDangerToast,
 } from '../../messageToasts/actions';
 import { UPDATE_COMPONENTS_PARENTS_LIST } from '../actions/dashboardLayout';
-import serializeActiveFilterValues from '../util/serializeActiveFilterValues';
-import serializeFilterScopes from '../util/serializeFilterScopes';
-import { getActiveFilters } from '../util/activeDashboardFilters';
-import { safeStringify } from '../../utils/safeStringify';
 
 export const SET_UNSAVED_CHANGES = 'SET_UNSAVED_CHANGES';
 export function setUnsavedChanges(hasUnsavedChanges) {
@@ -110,12 +106,9 @@ export function togglePublished(isPublished) {
 
 export function savePublished(id, isPublished) {
   return function savePublishedThunk(dispatch) {
-    return SupersetClient.put({
-      endpoint: `/api/v1/dashboard/${id}`,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        published: isPublished,
-      }),
+    return SupersetClient.post({
+      endpoint: `/superset/dashboard/${id}/published/`,
+      postPayload: { published: isPublished },
     })
       .then(() => {
         const nowPublished = isPublished ? 'published' : 'hidden';
@@ -185,19 +178,10 @@ export function saveDashboardRequest(data, id, saveType) {
       directPathToFilter.push(componentId);
       dispatch(updateDirectPathToFilter(chartId, directPathToFilter));
     });
-    // serialize selected values for each filter field, grouped by filter id
-    const serializedFilters = serializeActiveFilterValues(getActiveFilters());
-    // serialize filter scope for each filter field, grouped by filter id
-    const serializedFilterScopes = serializeFilterScopes(dashboardFilters);
+
     return SupersetClient.post({
       endpoint: `/superset/${path}/${id}/`,
-      postPayload: {
-        data: {
-          ...data,
-          default_filters: safeStringify(serializedFilters),
-          filter_scopes: safeStringify(serializedFilterScopes),
-        },
-      },
+      postPayload: { data },
     })
       .then(response => {
         dispatch(saveDashboardRequestSuccess());

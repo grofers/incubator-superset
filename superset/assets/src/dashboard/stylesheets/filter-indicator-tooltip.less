@@ -16,24 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-@import '../../../stylesheets/less/variables.less';
-
 #filter-indicator-tooltip {
-  font-size: @font-size-m;
+  font-size: 15px;
   text-align: left;
 
   > .tooltip-arrow {
     margin-right: 8px;
-    border-left-color: @gray-dark;
+    border-left-color: #484848;
   }
 
   > .tooltip-inner {
     width: 200px;
     max-width: 200px;
-    border-radius: @border-radius-large;
+    border-radius: 4px;
     margin-right: 8px;
     padding: 16px 12px;
-    background-color: @gray-dark;
+    background-color: #484848;
     text-align: left;
   }
 }
@@ -42,6 +40,7 @@
   position: relative;
 
   .filter-content {
+    line-height: 22px;
     margin-right: 22px;
     text-align: left;
     display: flex;
@@ -49,7 +48,7 @@
     align-items: stretch;
 
     label {
-      font-weight: @font-weight-bold;
+      font-weight: 700;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
@@ -58,7 +57,6 @@
   }
 
   .filter-edit {
-    cursor: pointer;
     position: absolute;
     top: 4px;
     right: 0;

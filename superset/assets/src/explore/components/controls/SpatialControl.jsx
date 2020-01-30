@@ -19,12 +19,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Row,
-  Col,
-  Button,
-  Label,
-  OverlayTrigger,
-  Popover,
+  Row, Col, Button, Label, OverlayTrigger, Popover,
 } from 'react-bootstrap';
 import { t } from '@superset-ui/translation';
 
@@ -113,10 +108,7 @@ export default class SpatialControl extends React.Component {
     this.refs.trigger.hide();
   }
   toggleCheckbox() {
-    this.setState(
-      { reverseCheckbox: !this.state.reverseCheckbox },
-      this.onChange,
-    );
+    this.setState({ reverseCheckbox: !this.state.reverseCheckbox }, this.onChange);
   }
   renderLabelContent() {
     if (this.state.errors.length > 0) {
@@ -141,7 +133,7 @@ export default class SpatialControl extends React.Component {
         onFocus={() => {
           this.setType(type);
         }}
-        onChange={value => {
+        onChange={(value) => {
           this.setState({ [name]: value }, this.onChange);
         }}
       />
@@ -151,12 +143,8 @@ export default class SpatialControl extends React.Component {
     return (
       <span>
         {t('Reverse lat/long ')}
-        <Checkbox
-          checked={this.state.reverseCheckbox}
-          onChange={this.toggleCheckbox}
-        />
-      </span>
-    );
+        <Checkbox checked={this.state.reverseCheckbox} onChange={this.toggleCheckbox} />
+      </span>);
   }
   renderPopover() {
     return (
@@ -182,8 +170,7 @@ export default class SpatialControl extends React.Component {
             title={t('Delimited long & lat single column')}
             info={t(
               'Multiple formats accepted, look the geopy.points ' +
-                'Python library for more details',
-            )}
+              'Python library for more details')}
             isSelected={this.state.type === spatialTypes.delimited}
             onSelect={this.setType.bind(this, spatialTypes.delimited)}
           >
@@ -192,7 +179,9 @@ export default class SpatialControl extends React.Component {
                 {t('Column')}
                 {this.renderSelect('lonlatCol', spatialTypes.delimited)}
               </Col>
-              <Col md={6}>{this.renderReverseCheckbox()}</Col>
+              <Col md={6}>
+                {this.renderReverseCheckbox()}
+              </Col>
             </Row>
           </PopoverSection>
           <PopoverSection
@@ -205,7 +194,9 @@ export default class SpatialControl extends React.Component {
                 Column
                 {this.renderSelect('geohashCol', spatialTypes.geohash)}
               </Col>
-              <Col md={6}>{this.renderReverseCheckbox()}</Col>
+              <Col md={6}>
+                {this.renderReverseCheckbox()}
+              </Col>
             </Row>
           </PopoverSection>
           <div className="clearfix">

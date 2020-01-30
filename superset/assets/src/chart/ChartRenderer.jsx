@@ -93,15 +93,13 @@ class ChartRenderer extends React.Component {
       this.hasQueryResponseChange =
         nextProps.queryResponse !== this.props.queryResponse;
 
-      if (
-        this.hasQueryResponseChange ||
+      if (this.hasQueryResponseChange ||
         nextProps.annotationData !== this.props.annotationData ||
         nextProps.height !== this.props.height ||
         nextProps.width !== this.props.width ||
         nextState.tooltip !== this.state.tooltip ||
         nextProps.triggerRender ||
-        nextProps.formData.color_scheme !== this.props.formData.color_scheme
-      ) {
+        nextProps.formData.color_scheme !== this.props.formData.color_scheme) {
         return true;
       }
     }
@@ -138,11 +136,7 @@ class ChartRenderer extends React.Component {
   handleRenderFailure(error, info) {
     const { actions, chartId } = this.props;
     console.warn(error); // eslint-disable-line
-    actions.chartRenderingFailed(
-      error.toString(),
-      chartId,
-      info ? info.componentStack : null,
-    );
+    actions.chartRenderingFailed(error.toString(), chartId, info ? info.componentStack : null);
 
     // only trigger render log when query is changed
     if (this.hasQueryResponseChange) {
@@ -176,15 +170,12 @@ class ChartRenderer extends React.Component {
           positionLeft={tooltip.x + 30}
           arrowOffsetTop={10}
         >
-          {typeof tooltip.content === 'string' ? (
+          {typeof (tooltip.content) === 'string' ?
             <div // eslint-disable-next-line react/no-danger
-              dangerouslySetInnerHTML={{
-                __html: dompurify.sanitize(tooltip.content),
-              }}
+              dangerouslySetInnerHTML={{ __html: dompurify.sanitize(tooltip.content) }}
             />
-          ) : (
-            tooltip.content
-          )}
+            : tooltip.content
+          }
         </Tooltip>
       );
     }
@@ -197,16 +188,10 @@ class ChartRenderer extends React.Component {
       chartStatus,
       vizType,
       chartId,
-      refreshOverlayVisible,
     } = this.props;
 
     // Skip chart rendering
-    if (
-      refreshOverlayVisible ||
-      chartStatus === 'loading' ||
-      !!chartAlert ||
-      chartStatus === null
-    ) {
+    if (chartStatus === 'loading' || !!chartAlert || chartStatus === null) {
       return null;
     }
 
@@ -223,7 +208,7 @@ class ChartRenderer extends React.Component {
     } = this.props;
 
     return (
-      <>
+      <React.Fragment>
         {this.renderTooltip()}
         <SuperChart
           disableErrorBoundary
@@ -241,7 +226,7 @@ class ChartRenderer extends React.Component {
           onRenderSuccess={this.handleRenderSuccess}
           onRenderFailure={this.handleRenderFailure}
         />
-      </>
+      </React.Fragment>
     );
   }
 }

@@ -34,7 +34,9 @@ const defaultProps = {
 };
 
 function TestOption({ option }) {
-  return <span>{option.label}</span>;
+  return (
+    <span>{option.label}</span>
+  );
 }
 TestOption.propTypes = {
   option: PropTypes.object.isRequired,
@@ -73,18 +75,14 @@ describe('VirtualizedRendererWrap', () => {
     props.option = props.focusedOption;
     wrapper = shallow(<RendererWrap {...props} />);
     const optionDiv = wrapper.find('div');
-    expect(optionDiv.props().className).toBe(
-      'VirtualizedSelectOption VirtualizedSelectFocusedOption',
-    );
+    expect(optionDiv.props().className).toBe('VirtualizedSelectOption VirtualizedSelectFocusedOption');
   });
 
   it('renders disabled option with the correct class', () => {
     props.option.disabled = true;
     wrapper = shallow(<RendererWrap {...props} />);
     const optionDiv = wrapper.find('div');
-    expect(optionDiv.props().className).toBe(
-      'VirtualizedSelectOption VirtualizedSelectDisabledOption',
-    );
+    expect(optionDiv.props().className).toBe('VirtualizedSelectOption VirtualizedSelectDisabledOption');
     props.option.disabled = false;
   });
 
@@ -92,18 +90,14 @@ describe('VirtualizedRendererWrap', () => {
     props.valueArray = [props.option, props.focusedOption];
     wrapper = shallow(<RendererWrap {...props} />);
     const optionDiv = wrapper.find('div');
-    expect(optionDiv.props().className).toBe(
-      'VirtualizedSelectOption VirtualizedSelectSelectedOption',
-    );
+    expect(optionDiv.props().className).toBe('VirtualizedSelectOption VirtualizedSelectSelectedOption');
   });
 
   it('renders options with custom classes', () => {
     props.option.className = 'CustomClass';
     wrapper = shallow(<RendererWrap {...props} />);
     const optionDiv = wrapper.find('div');
-    expect(optionDiv.props().className).toBe(
-      'VirtualizedSelectOption CustomClass',
-    );
+    expect(optionDiv.props().className).toBe('VirtualizedSelectOption CustomClass');
   });
 
   it('calls focusedOption on its own option onMouseEnter', () => {

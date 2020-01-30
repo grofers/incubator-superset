@@ -19,6 +19,7 @@
 import chartReducer, { chart } from '../../../src/chart/chartReducer';
 import * as actions from '../../../src/chart/chartAction';
 
+
 describe('chart reducers', () => {
   const chartKey = 1;
   let testChart;
@@ -38,10 +39,7 @@ describe('chart reducers', () => {
   });
 
   it('should update endtime on timeout', () => {
-    const newState = chartReducer(
-      charts,
-      actions.chartUpdateTimeout('timeout', 60, chartKey),
-    );
+    const newState = chartReducer(charts, actions.chartUpdateTimeout('timeout', 60, chartKey));
     expect(newState[chartKey].chartUpdateEndTime).toBeGreaterThan(0);
     expect(newState[chartKey].chartStatus).toEqual('failed');
   });

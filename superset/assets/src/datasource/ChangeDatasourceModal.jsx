@@ -19,7 +19,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'reactable-arc';
-import { FormControl, Modal } from 'react-bootstrap';
+import {
+  FormControl,
+  Modal,
+} from 'react-bootstrap';
 import { SupersetClient } from '@superset-ui/connection';
 import { t } from '@superset-ui/translation';
 
@@ -84,7 +87,7 @@ class ChangeDatasourceModal extends React.PureComponent {
 
           this.setState({ loading: false, datasources });
         })
-        .catch(response => {
+        .catch((response) => {
           this.setState({ loading: false });
           getClientErrorObject(response).then(({ error }) => {
             this.props.addDangerToast(error.error || error.statusText || error);
@@ -109,11 +112,9 @@ class ChangeDatasourceModal extends React.PureComponent {
         this.props.onDatasourceSave(json);
         this.props.onChange(datasource.uid);
       })
-      .catch(response => {
+      .catch((response) => {
         getClientErrorObject(response).then(({ error, message }) => {
-          const errorMessage = error
-            ? error.error || error.statusText || error
-            : message;
+          const errorMessage = error ? error.error || error.statusText || error : message;
           this.props.addDangerToast(errorMessage);
         });
       });
@@ -138,7 +139,7 @@ class ChangeDatasourceModal extends React.PureComponent {
         <Modal.Body>
           <div>
             <FormControl
-              inputRef={ref => {
+              inputRef={(ref) => {
                 this.setSearchRef(ref);
               }}
               type="text"

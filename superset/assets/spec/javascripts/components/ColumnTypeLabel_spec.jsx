@@ -34,9 +34,7 @@ describe('ColumnOption', () => {
   }
 
   it('is a valid element', () => {
-    expect(React.isValidElement(<ColumnTypeLabel {...defaultProps} />)).toBe(
-      true,
-    );
+    expect(React.isValidElement(<ColumnTypeLabel {...defaultProps} />)).toBe(true);
   });
   it('string type shows ABC icon', () => {
     const lbl = getWrapper({}).find('.type-label');

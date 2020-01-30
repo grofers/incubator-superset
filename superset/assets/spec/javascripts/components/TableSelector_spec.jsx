@@ -81,10 +81,12 @@ describe('TableSelector', () => {
     afterAll(fetchMock.reset);
 
     it('should handle empty', () =>
-      inst.getTableNamesBySubStr('').then(data => {
-        expect(data).toEqual({ options: [] });
-        return Promise.resolve();
-      }));
+      inst
+        .getTableNamesBySubStr('')
+        .then((data) => {
+          expect(data).toEqual({ options: [] });
+          return Promise.resolve();
+        }));
 
     it('should handle table name', () => {
       fetchMock.get(GET_TABLE_NAMES_GLOB, tables, { overwriteRoutes: true });
@@ -92,29 +94,28 @@ describe('TableSelector', () => {
       return wrapper
         .instance()
         .getTableNamesBySubStr('my table')
-        .then(data => {
+        .then((data) => {
           expect(fetchMock.calls(GET_TABLE_NAMES_GLOB)).toHaveLength(1);
           expect(data).toEqual({
             options: [
-              {
-                value: 'birth_names',
-                schema: 'main',
-                label: 'birth_names',
-                title: 'birth_names',
-              },
-              {
-                value: 'energy_usage',
-                schema: 'main',
-                label: 'energy_usage',
-                title: 'energy_usage',
-              },
-              {
-                value: 'wb_health_population',
-                schema: 'main',
-                label: 'wb_health_population',
-                title: 'wb_health_population',
-              },
-            ],
+            {
+              value: 'birth_names',
+              schema: 'main',
+              label: 'birth_names',
+              title: 'birth_names',
+            },
+            {
+              value: 'energy_usage',
+              schema: 'main',
+              label: 'energy_usage',
+              title: 'energy_usage',
+            },
+            {
+              value: 'wb_health_population',
+              schema: 'main',
+              label: 'wb_health_population',
+              title: 'wb_health_population',
+            }],
           });
           return Promise.resolve();
         });
@@ -129,9 +130,8 @@ describe('TableSelector', () => {
         .instance()
         .getTableNamesBySubStr('slashed/table')
         .then(() => {
-          expect(fetchMock.lastUrl(GET_TABLE_GLOB)).toContain(
-            '/slashed%252Fschema/slashed%252Ftable',
-          );
+          expect(fetchMock.lastUrl(GET_TABLE_GLOB))
+            .toContain('/slashed%252Fschema/slashed%252Ftable');
           return Promise.resolve();
         });
     });
@@ -149,39 +149,37 @@ describe('TableSelector', () => {
 
     it('should fetch table options', () => {
       fetchMock.get(FETCH_TABLES_GLOB, tables, { overwriteRoutes: true });
-      return inst.fetchTables(true, 'birth_names').then(() => {
-        expect(wrapper.state().tableOptions).toHaveLength(3);
-        expect(wrapper.state().tableOptions).toEqual([
-          {
-            value: 'birth_names',
-            schema: 'main',
-            label: 'birth_names',
-            title: 'birth_names',
-          },
-          {
-            value: 'energy_usage',
-            schema: 'main',
-            label: 'energy_usage',
-            title: 'energy_usage',
-          },
-          {
-            value: 'wb_health_population',
-            schema: 'main',
-            label: 'wb_health_population',
-            title: 'wb_health_population',
-          },
-        ]);
-        return Promise.resolve();
-      });
+      return inst
+        .fetchTables(true, 'birth_names')
+        .then(() => {
+          expect(wrapper.state().tableOptions).toHaveLength(3);
+          expect(wrapper.state().tableOptions).toEqual([
+            {
+              value: 'birth_names',
+              schema: 'main',
+              label: 'birth_names',
+              title: 'birth_names',
+            },
+            {
+              value: 'energy_usage',
+              schema: 'main',
+              label: 'energy_usage',
+              title: 'energy_usage',
+            },
+            {
+              value: 'wb_health_population',
+              schema: 'main',
+              label: 'wb_health_population',
+              title: 'wb_health_population',
+            },
+          ]);
+          return Promise.resolve();
+        });
     });
 
     // Test needs to be fixed: Github issue #7768
     xit('should dispatch a danger toast on error', () => {
-      fetchMock.get(
-        FETCH_TABLES_GLOB,
-        { throws: 'error' },
-        { overwriteRoutes: true },
-      );
+      fetchMock.get(FETCH_TABLES_GLOB, { throws: 'error' }, { overwriteRoutes: true });
 
       wrapper
         .instance()
@@ -204,9 +202,7 @@ describe('TableSelector', () => {
       const schemaOptions = {
         schemas: ['main', 'erf', 'superset'],
       };
-      fetchMock.get(FETCH_SCHEMAS_GLOB, schemaOptions, {
-        overwriteRoutes: true,
-      });
+      fetchMock.get(FETCH_SCHEMAS_GLOB, schemaOptions, { overwriteRoutes: true });
 
       return wrapper
         .instance()

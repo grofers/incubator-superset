@@ -33,9 +33,15 @@ describe('getFormDataWithExtraFilters', () => {
         ],
       },
     },
+    dashboardMetadata: {
+      filterImmuneSlices: [],
+      filterImmuneSliceFields: {},
+    },
     filters: {
-      region: ['Spain'],
-      color: ['pink', 'purple'],
+      filterId: {
+        region: ['Spain'],
+        color: ['pink', 'purple'],
+      },
     },
     sliceId: chartId,
   };
@@ -53,5 +59,27 @@ describe('getFormDataWithExtraFilters', () => {
       op: 'in',
       val: ['pink', 'purple'],
     });
+  });
+
+  it('should not add additional filters if the slice is immune to them', () => {
+    const result = getFormDataWithExtraFilters({
+      ...mockArgs,
+      dashboardMetadata: {
+        filterImmuneSlices: [chartId],
+      },
+    });
+    expect(result.extra_filters).toHaveLength(0);
+  });
+
+  it('should not add additional filters for fields to which the slice is immune', () => {
+    const result = getFormDataWithExtraFilters({
+      ...mockArgs,
+      dashboardMetadata: {
+        filterImmuneSliceFields: {
+          [chartId]: ['region'],
+        },
+      },
+    });
+    expect(result.extra_filters).toHaveLength(1);
   });
 });

@@ -18,7 +18,7 @@
  */
 .dashboard-component-tabs {
   width: 100%;
-  background-color: @lightest;
+  background-color: white;
 
   & .nav-tabs {
     border-bottom: none;
@@ -31,7 +31,7 @@
         color: @almost-black;
         border: none;
         padding: 12px 0 14px 0;
-        font-size: @font-size-m;
+        font-size: 15px;
         margin-right: 0;
       }
 
@@ -43,7 +43,7 @@
 
       & > a:focus {
         outline: none;
-        background: @lightest;
+        background: #fff;
       }
 
       & .dragdroppable-tab {
@@ -71,7 +71,7 @@
 
       & .fa-plus {
         color: @gray-dark;
-        font-size: @font-size-m;
+        font-size: 14px;
         margin-top: 3px;
       }
 
@@ -90,11 +90,7 @@
       height: 3px;
       width: 100%;
       bottom: 0;
-      background: linear-gradient(
-        to right,
-        @indicator-color,
-        shade(@indicator-color, @colorstop-two)
-      );
+      background: linear-gradient(to right, #e32464, #2c2261);
     }
   }
 

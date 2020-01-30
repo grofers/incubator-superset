@@ -25,13 +25,10 @@ import Chart from './Chart';
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(
-      {
-        ...actions,
-        logEvent,
-      },
-      dispatch,
-    ),
+    actions: bindActionCreators({
+      ...actions,
+      logEvent,
+    }, dispatch),
   };
 }
 

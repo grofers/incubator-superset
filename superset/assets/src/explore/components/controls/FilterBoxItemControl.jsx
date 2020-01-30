@@ -62,7 +62,8 @@ export default class FilterBoxItemControl extends React.Component {
   onControlChange(attr, value) {
     this.setState({ [attr]: value }, this.onChange);
   }
-  setType() {}
+  setType() {
+  }
   textSummary() {
     return this.state.column || 'N/A';
   }
@@ -76,15 +77,10 @@ export default class FilterBoxItemControl extends React.Component {
               value={this.state.column}
               name="column"
               clearable={false}
-              options={this.props.datasource.columns
-                .filter(col => col !== this.state.column)
-                .map(col => ({
-                  value: col.column_name,
-                  label: col.column_name,
-                }))
-                .concat([
-                  { value: this.state.column, label: this.state.column },
-                ])}
+              options={this.props.datasource.columns.map(col => ({
+                value: col.column_name,
+                label: col.column_name,
+              }))}
               onChange={v => this.onControlChange('column', v)}
             />
           }
@@ -103,9 +99,8 @@ export default class FilterBoxItemControl extends React.Component {
           label={t('Default')}
           tooltip={t(
             '(optional) default value for the filter, when using ' +
-              'the multiple option, you can use a semicolon-delimited list ' +
-              'of options.',
-          )}
+            'the multiple option, you can use a semicolon-delimited list ' +
+            'of options.')}
           control={
             <TextControl
               value={this.state.defaultValue}
@@ -121,15 +116,10 @@ export default class FilterBoxItemControl extends React.Component {
             <SelectControl
               value={this.state.metric}
               name="column"
-              options={this.props.datasource.metrics
-                .filter(metric => metric !== this.state.metric)
-                .map(m => ({
-                  value: m.metric_name,
-                  label: m.metric_name,
-                }))
-                .concat([
-                  { value: this.state.metric, label: this.state.metric },
-                ])}
+              options={this.props.datasource.metrics.map(m => ({
+                value: m.metric_name,
+                label: m.metric_name,
+              }))}
               onChange={v => this.onControlChange('metric', v)}
             />
           }
@@ -150,8 +140,7 @@ export default class FilterBoxItemControl extends React.Component {
           isCheckbox
           tooltip={t(
             'Multiple selections allowed, otherwise filter ' +
-              'is limited to a single value',
-          )}
+            'is limited to a single value')}
           control={
             <CheckboxControl
               value={this.state.multiple}
@@ -170,13 +159,14 @@ export default class FilterBoxItemControl extends React.Component {
             />
           }
         />
-      </div>
-    );
+      </div>);
   }
   renderPopover() {
     return (
       <Popover id="ts-col-popo" title={t('Filter Configuration')}>
-        <div style={STYLE_WIDTH}>{this.renderForm()}</div>
+        <div style={STYLE_WIDTH}>
+          {this.renderForm()}
+        </div>
       </Popover>
     );
   }

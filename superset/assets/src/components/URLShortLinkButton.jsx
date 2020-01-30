@@ -49,9 +49,7 @@ class URLShortLinkButton extends React.Component {
   }
 
   getCopyUrl() {
-    getShortUrl(this.props.url)
-      .then(this.onShortUrlSuccess)
-      .catch(this.props.addDangerToast);
+    getShortUrl(this.props.url).then(this.onShortUrlSuccess).catch(this.props.addDangerToast);
   }
 
   renderPopover() {
@@ -60,14 +58,10 @@ class URLShortLinkButton extends React.Component {
       <Popover id="shorturl-popover">
         <CopyToClipboard
           text={this.state.shortUrl}
-          copyNode={
-            <i className="fa fa-clipboard" title={t('Copy to clipboard')} />
-          }
+          copyNode={<i className="fa fa-clipboard" title={t('Copy to clipboard')} />}
         />
         &nbsp;&nbsp;
-        <a
-          href={`mailto:?Subject=${this.props.emailSubject}%20&Body=${emailBody}`}
-        >
+        <a href={`mailto:?Subject=${this.props.emailSubject}%20&Body=${emailBody}`}>
           <i className="fa fa-envelope" />
         </a>
       </Popover>
@@ -84,12 +78,8 @@ class URLShortLinkButton extends React.Component {
         onEnter={this.getCopyUrl}
         overlay={this.renderPopover()}
       >
-        <span
-          className="short-link-trigger btn btn-default btn-sm"
-          data-test="short-link-button"
-        >
-          <i className="short-link-trigger fa fa-link" />
-          &nbsp;
+        <span className="short-link-trigger btn btn-default btn-sm" data-test="short-link-button">
+          <i className="short-link-trigger fa fa-link" />&nbsp;
         </span>
       </OverlayTrigger>
     );

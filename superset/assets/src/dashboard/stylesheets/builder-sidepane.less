@@ -16,15 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-@import '../../../stylesheets/less/variables.less';
-
 .dashboard-builder-sidepane {
   flex: 0 0 @builder-pane-width;
+  z-index: 10;
   position: relative;
 
   .dashboard-builder-sidepane-header {
-    font-size: @font-size-l;
-    font-weight: @font-weight-bold;
+    font-size: 15px;
+    font-weight: 700;
     border-top: 1px solid @gray-light;
     border-bottom: 1px solid @gray-light;
     padding: 16px;
@@ -33,7 +32,7 @@
   }
 
   .trigger {
-    font-size: @font-size-l;
+    font-size: 16px;
     color: @almost-black;
     opacity: 1;
     margin-left: auto;
@@ -51,16 +50,16 @@
     overflow: hidden;
     width: @builder-pane-width;
     height: 100%;
-    box-shadow: -4px 0 4px 0 fade(@darkest, @opacity-light);
+    box-shadow: -4px 0 4px 0 rgba(0, 0, 0, 0.1);
   }
 
   .slider-container {
     position: absolute;
-    background: @lightest;
+    background: white;
     width: @builder-pane-width * 2;
     height: 100vh;
     display: flex;
-    transition: all @timing-normal ease;
+    transition: all 0.5s ease;
 
     &.slide-in {
       left: -@builder-pane-width;
@@ -93,12 +92,12 @@
   .chart-card-container {
     .chart-card {
       border: 1px solid @gray-light;
-      font-weight: @font-weight-light;
+      font-weight: 200;
       padding: 16px;
       margin: 0 16px 16px 16px;
       position: relative;
       cursor: move;
-      background: fade(@lightest, @opacity-medium-light);
+      background: rgba(255, 255, 255, 0.4);
 
       &:hover {
         background: @gray-bg;
@@ -108,7 +107,7 @@
     .card-title {
       margin-right: 60px;
       margin-bottom: 8px;
-      font-weight: @font-weight-bold;
+      font-weight: 800;
     }
 
     .card-body {
@@ -120,7 +119,7 @@
           word-break: break-all;
 
           &:first-child {
-            font-weight: @font-weight-normal;
+            font-weight: 400;
           }
         }
       }
@@ -133,9 +132,9 @@
 
     .is-added-label {
       background: @almost-black;
-      color: @lightest;
-      font-size: @font-size-s;
-      line-height: @line-height-tight;
+      color: white;
+      font-size: 12px;
+      line-height: 1em;
       text-transform: uppercase;
       position: absolute;
       padding: 4px 8px;
@@ -165,7 +164,8 @@
 
       .dropdown.btn-group button,
       input {
-        font-size: @font-size-m;
+        font-size: 14px;
+        line-height: 16px;
         padding: 7px 12px;
         height: 32px;
         border: 1px solid @gray-light;

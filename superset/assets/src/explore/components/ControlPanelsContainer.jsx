@@ -24,13 +24,12 @@ import { connect } from 'react-redux';
 import { Alert, Tab, Tabs } from 'react-bootstrap';
 import { isPlainObject } from 'lodash';
 import { t } from '@superset-ui/translation';
-import { getChartControlPanelRegistry } from '@superset-ui/chart';
 
+import controlPanelConfigs, { sectionsToRender } from '../controlPanels';
 import ControlPanelSection from './ControlPanelSection';
 import ControlRow from './ControlRow';
 import Control from './Control';
 import controlConfigs from '../controls';
-import { sectionsToRender } from '../controlUtils';
 import * as exploreActions from '../actions/exploreActions';
 
 const propTypes = {
@@ -63,32 +62,20 @@ class ControlPanelsContainer extends React.Component {
     let mapF = controlConfigs[controlName].mapStateToProps;
 
     // Looking to find mapStateToProps override for this viz type
-    const controlPanelConfig =
-      getChartControlPanelRegistry().get(this.props.controls.viz_type.value) ||
-      {};
-    const controlOverrides = controlPanelConfig.controlOverrides || {};
-    if (
-      controlOverrides[controlName] &&
-      controlOverrides[controlName].mapStateToProps
-    ) {
+    const config = controlPanelConfigs[this.props.controls.viz_type.value] || {};
+    const controlOverrides = config.controlOverrides || {};
+    if (controlOverrides[controlName] && controlOverrides[controlName].mapStateToProps) {
       mapF = controlOverrides[controlName].mapStateToProps;
     }
     // Applying mapStateToProps if needed
     if (mapF) {
-      return Object.assign(
-        {},
-        control,
-        mapF(this.props.exploreState, control, this.props.actions),
-      );
+      return Object.assign({}, control, mapF(this.props.exploreState, control, this.props.actions));
     }
     return control;
   }
 
   sectionsToRender() {
-    return sectionsToRender(
-      this.props.form_data.viz_type,
-      this.props.datasource_type,
-    );
+    return sectionsToRender(this.props.form_data.viz_type, this.props.datasource_type);
   }
 
   removeAlert() {
@@ -99,21 +86,19 @@ class ControlPanelsContainer extends React.Component {
     const { actions, controls, exploreState, form_data: formData } = this.props;
 
     // Looking to find mapStateToProps override for this viz type
-    const controlPanelConfig =
-      getChartControlPanelRegistry().get(controls.viz_type.value) || {};
-    const controlOverrides = controlPanelConfig.controlOverrides || {};
-    const overrides = controlOverrides[name];
+    const controlPanelConfig = controlPanelConfigs[controls.viz_type.value].controlOverrides || {};
+    const overrides = controlPanelConfig[name];
 
     // Identifying mapStateToProps function to apply (logic can't be in store)
-    const mapFn =
-      overrides && overrides.mapStateToProps
-        ? overrides.mapStateToProps
-        : config.mapStateToProps;
+    const mapFn = (overrides && overrides.mapStateToProps)
+      ? overrides.mapStateToProps
+      : config.mapStateToProps;
 
     // If the control item is not an object, we have to look up the control data from
     // the centralized controls file.
     // When it is an object we read control data straight from `config` instead
-    const controlData = lookupControlData ? controls[name] : config;
+    const controlData = lookupControlData ?
+      controls[name] : config;
 
     // Applying mapStateToProps if needed
     const additionalProps = mapFn
@@ -138,14 +123,11 @@ class ControlPanelsContainer extends React.Component {
   renderControlPanelSection(section) {
     const { controls } = this.props;
 
-    const hasErrors = section.controlSetRows.some(rows =>
-      rows.some(
-        s =>
-          controls[s] &&
-          controls[s].validationErrors &&
-          controls[s].validationErrors.length > 0,
-      ),
-    );
+    const hasErrors = section.controlSetRows.some(rows => rows.some(s => (
+        controls[s] &&
+        controls[s].validationErrors &&
+        (controls[s].validationErrors.length > 0)
+    )));
 
     return (
       <ControlPanelSection
@@ -159,18 +141,14 @@ class ControlPanelsContainer extends React.Component {
           <ControlRow
             key={`controlsetrow-${i}`}
             className="control-row"
-            controls={controlSets.map(controlItem => {
+            controls={controlSets.map((controlItem) => {
               if (!controlItem) {
                 // When the item is invalid
                 return null;
               } else if (React.isValidElement(controlItem)) {
                 // When the item is a React element
                 return controlItem;
-              } else if (
-                isPlainObject(controlItem) &&
-                controlItem.name &&
-                controlItem.config
-              ) {
+              } else if (isPlainObject(controlItem) && controlItem.name && controlItem.config) {
                 const { name, config } = controlItem;
 
                 return this.renderControl(name, config, false);
@@ -193,17 +171,15 @@ class ControlPanelsContainer extends React.Component {
     const allSectionsToRender = this.sectionsToRender();
     const querySectionsToRender = [];
     const displaySectionsToRender = [];
-    allSectionsToRender.forEach(section => {
-      if (
-        section.controlSetRows.some(rows =>
-          rows.some(
-            control =>
-              controlConfigs[control] &&
-              (!controlConfigs[control].renderTrigger ||
-                controlConfigs[control].tabOverride === 'data'),
-          ),
-        )
-      ) {
+    allSectionsToRender.forEach((section) => {
+      if (section.controlSetRows.some(rows => rows.some(
+        control => (
+          controlConfigs[control] &&
+          (
+            !controlConfigs[control].renderTrigger ||
+            controlConfigs[control].tabOverride === 'data'
+          )
+        )))) {
         querySectionsToRender.push(section);
       } else {
         displaySectionsToRender.push(section);
@@ -213,7 +189,7 @@ class ControlPanelsContainer extends React.Component {
     return (
       <div className="scrollbar-container">
         <div className="scrollbar-content">
-          {this.props.alert && (
+          {this.props.alert &&
             <Alert bsStyle="warning">
               {this.props.alert}
               <i
@@ -222,16 +198,16 @@ class ControlPanelsContainer extends React.Component {
                 style={{ cursor: 'pointer' }}
               />
             </Alert>
-          )}
+          }
           <Tabs id="controlSections">
             <Tab eventKey="query" title={t('Data')}>
               {querySectionsToRender.map(this.renderControlPanelSection)}
             </Tab>
-            {displaySectionsToRender.length > 0 && (
+            {displaySectionsToRender.length > 0 &&
               <Tab eventKey="display" title={t('Customize')}>
                 {displaySectionsToRender.map(this.renderControlPanelSection)}
               </Tab>
-            )}
+            }
           </Tabs>
         </div>
       </div>
@@ -258,7 +234,4 @@ function mapDispatchToProps(dispatch) {
 
 export { ControlPanelsContainer };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ControlPanelsContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(ControlPanelsContainer);

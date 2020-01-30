@@ -53,12 +53,11 @@ describe('SqlEditorLeftBar', () => {
   });
 
   it('is valid', () => {
-    expect(React.isValidElement(<SqlEditorLeftBar {...mockedProps} />)).toBe(
-      true,
-    );
+    expect(React.isValidElement(<SqlEditorLeftBar {...mockedProps} />)).toBe(true);
   });
 
   it('renders a TableElement', () => {
     expect(wrapper.find(TableElement)).toHaveLength(1);
   });
+
 });

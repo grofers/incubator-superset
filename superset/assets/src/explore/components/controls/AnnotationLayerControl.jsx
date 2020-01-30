@@ -18,12 +18,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  OverlayTrigger,
-  Popover,
-  ListGroup,
-  ListGroupItem,
-} from 'react-bootstrap';
+import { OverlayTrigger, Popover, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { t } from '@superset-ui/translation';
 import { getChartKey } from '../../exploreUtils';
@@ -64,11 +59,7 @@ class AnnotationLayerControl extends React.PureComponent {
   UNSAFE_componentWillReceiveProps(nextProps) {
     const { name, annotationError, validationErrors, value } = nextProps;
     if (Object.keys(annotationError).length && !validationErrors.length) {
-      this.props.actions.setControlValue(
-        name,
-        value,
-        Object.keys(annotationError),
-      );
+      this.props.actions.setControlValue(name, value, Object.keys(annotationError));
     }
     if (!Object.keys(annotationError).length && validationErrors.length) {
       this.props.actions.setControlValue(name, value, []);
@@ -78,9 +69,7 @@ class AnnotationLayerControl extends React.PureComponent {
   addAnnotationLayer(annotationLayer) {
     const annotation = annotationLayer;
     let annotations = this.props.value.slice();
-    const i = annotations.findIndex(
-      x => x.name === (annotation.oldName || annotation.name),
-    );
+    const i = annotations.findIndex(x => x.name === (annotation.oldName || annotation.name));
     delete annotation.oldName;
     if (i > -1) {
       annotations[i] = annotation;
@@ -92,8 +81,7 @@ class AnnotationLayerControl extends React.PureComponent {
   }
 
   removeAnnotationLayer(annotation) {
-    const annotations = this.props.value
-      .slice()
+    const annotations = this.props.value.slice()
       .filter(x => x.name !== annotation.oldName);
     this.props.onChange(annotations);
   }
@@ -103,9 +91,7 @@ class AnnotationLayerControl extends React.PureComponent {
     return (
       <Popover
         style={{ maxWidth: 'none' }}
-        title={
-          annotation ? t('Edit Annotation Layer') : t('Add Annotation Layer')
-        }
+        title={annotation ? t('Edit Annotation Layer') : t('Add Annotation Layer')}
         id={`annotation-pop-${id}`}
       >
         <AnnotationLayer
@@ -151,15 +137,14 @@ class AnnotationLayerControl extends React.PureComponent {
         rootClose
         ref={`overlay-${i}`}
         placement="right"
-        overlay={this.renderPopover(
-          `overlay-${i}`,
-          anno,
-          this.props.annotationError[anno.name],
-        )}
+        overlay={this.renderPopover(`overlay-${i}`, anno,
+          this.props.annotationError[anno.name])}
       >
         <ListGroupItem>
           <span>{anno.name}</span>
-          <span style={{ float: 'right' }}>{this.renderInfo(anno)}</span>
+          <span style={{ float: 'right' }}>
+            {this.renderInfo(anno)}
+          </span>
         </ListGroupItem>
       </OverlayTrigger>
     ));
@@ -203,12 +188,8 @@ function mapStateToProps({ charts, explore }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    refreshAnnotationData: annotationLayer =>
-      dispatch(runAnnotationQuery(annotationLayer)),
+    refreshAnnotationData: annotationLayer => dispatch(runAnnotationQuery(annotationLayer)),
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(AnnotationLayerControl);
+export default connect(mapStateToProps, mapDispatchToProps)(AnnotationLayerControl);

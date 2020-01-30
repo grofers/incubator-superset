@@ -24,15 +24,25 @@ import 'brace/theme/github';
 import 'brace/ext/language_tools';
 import ace from 'brace';
 import { areArraysShallowEqual } from '../../reduxUtils';
-import sqlKeywords from '../utils/sqlKeywords';
-import {
-  SCHEMA_AUTOCOMPLETE_SCORE,
-  TABLE_AUTOCOMPLETE_SCORE,
-  COLUMN_AUTOCOMPLETE_SCORE,
-  SQL_FUNCTIONS_AUTOCOMPLETE_SCORE,
-} from '../constants';
 
 const langTools = ace.acequire('ace/ext/language_tools');
+
+const keywords = (
+  'SELECT|INSERT|UPDATE|DELETE|FROM|WHERE|AND|OR|GROUP|BY|ORDER|LIMIT|OFFSET|HAVING|AS|CASE|' +
+  'WHEN|THEN|ELSE|END|TYPE|LEFT|RIGHT|JOIN|ON|OUTER|DESC|ASC|UNION|CREATE|TABLE|PRIMARY|KEY|IF|' +
+  'FOREIGN|NOT|REFERENCES|DEFAULT|NULL|INNER|CROSS|NATURAL|DATABASE|DROP|GRANT|SUM|MAX|MIN|COUNT|' +
+  'AVG|DISTINCT'
+);
+
+const dataTypes = (
+  'INT|NUMERIC|DECIMAL|DATE|VARCHAR|CHAR|BIGINT|FLOAT|DOUBLE|BIT|BINARY|TEXT|SET|TIMESTAMP|' +
+  'MONEY|REAL|NUMBER|INTEGER'
+);
+
+const sqlKeywords = [].concat(keywords.split('|'), dataTypes.split('|'));
+export const sqlWords = sqlKeywords.map(s => ({
+  name: s, value: s, score: 60, meta: 'sql',
+}));
 
 const propTypes = {
   actions: PropTypes.object.isRequired,
@@ -40,17 +50,14 @@ const propTypes = {
   sql: PropTypes.string.isRequired,
   schemas: PropTypes.array,
   tables: PropTypes.array,
-  functionNames: PropTypes.array,
   extendedTables: PropTypes.array,
   queryEditor: PropTypes.object.isRequired,
   height: PropTypes.string,
-  hotkeys: PropTypes.arrayOf(
-    PropTypes.shape({
-      key: PropTypes.string.isRequired,
-      descr: PropTypes.string.isRequired,
-      func: PropTypes.func.isRequired,
-    }),
-  ),
+  hotkeys: PropTypes.arrayOf(PropTypes.shape({
+    key: PropTypes.string.isRequired,
+    descr: PropTypes.string.isRequired,
+    func: PropTypes.func.isRequired,
+  })),
   onChange: PropTypes.func,
 };
 
@@ -59,7 +66,6 @@ const defaultProps = {
   onChange: () => {},
   schemas: [],
   tables: [],
-  functionNames: [],
   extendedTables: [],
 };
 
@@ -78,14 +84,9 @@ class AceEditorWrapper extends React.PureComponent {
     this.setAutoCompleter(this.props);
   }
   UNSAFE_componentWillReceiveProps(nextProps) {
-    if (
-      !areArraysShallowEqual(this.props.tables, nextProps.tables) ||
+    if (!areArraysShallowEqual(this.props.tables, nextProps.tables) ||
       !areArraysShallowEqual(this.props.schemas, nextProps.schemas) ||
-      !areArraysShallowEqual(
-        this.props.extendedTables,
-        nextProps.extendedTables,
-      )
-    ) {
+      !areArraysShallowEqual(this.props.extendedTables, nextProps.extendedTables)) {
       this.setAutoCompleter(nextProps);
     }
     if (nextProps.sql !== this.props.sql) {
@@ -106,7 +107,7 @@ class AceEditorWrapper extends React.PureComponent {
         this.onAltEnter();
       },
     });
-    this.props.hotkeys.forEach(keyConfig => {
+    this.props.hotkeys.forEach((keyConfig) => {
       editor.commands.addCommand({
         name: keyConfig.name,
         bindKey: { win: keyConfig.key, mac: keyConfig.key },
@@ -117,15 +118,10 @@ class AceEditorWrapper extends React.PureComponent {
     editor.selection.on('changeSelection', () => {
       const selectedText = editor.getSelectedText();
       // Backspace trigger 1 character selection, ignoring
-      if (
-        selectedText !== this.state.selectedText &&
-        selectedText.length !== 1
-      ) {
+      if (selectedText !== this.state.selectedText && selectedText.length !== 1) {
         this.setState({ selectedText });
         this.props.actions.queryEditorSetSelectedText(
-          this.props.queryEditor,
-          selectedText,
-        );
+          this.props.queryEditor, selectedText);
       }
     });
   }
@@ -134,11 +130,6 @@ class AceEditorWrapper extends React.PureComponent {
     this.props.onChange(text);
   }
   getCompletions(aceEditor, session, pos, prefix, callback) {
-    // If the prefix starts with a number, don't try to autocomplete with a
-    // table name or schema or anything else
-    if (!isNaN(parseInt(prefix, 10))) {
-      return;
-    }
     const completer = {
       insertMatch: (editor, data) => {
         if (data.meta === 'table') {
@@ -148,9 +139,7 @@ class AceEditorWrapper extends React.PureComponent {
             this.props.queryEditor.schema,
           );
         }
-        editor.completer.insertMatch({
-          value: `${data.caption}${data.meta === 'function' ? '' : ' '}`,
-        });
+        editor.completer.insertMatch({ value: data.caption + ' ' });
       },
     };
     const words = this.state.words.map(word => ({ ...word, completer }));
@@ -158,51 +147,26 @@ class AceEditorWrapper extends React.PureComponent {
   }
   setAutoCompleter(props) {
     // Loading schema, table and column names as auto-completable words
+    let words = [];
     const schemas = props.schemas || [];
-    const schemaWords = schemas.map(s => ({
-      name: s.label,
-      value: s.value,
-      score: SCHEMA_AUTOCOMPLETE_SCORE,
-      meta: 'schema',
-    }));
+    schemas.forEach((s) => {
+      words.push({ name: s.label, value: s.value, score: 60, meta: 'schema' });
+    });
     const columns = {};
     const tables = props.tables || [];
     const extendedTables = props.extendedTables || [];
-    const tableWords = tables.map(t => {
+    tables.forEach((t) => {
       const tableName = t.value;
+      words.push({ name: t.label, value: tableName, score: 55, meta: 'table' });
       const extendedTable = extendedTables.find(et => et.name === tableName);
-      const cols = (extendedTable && extendedTable.columns) || [];
-      cols.forEach(col => {
-        columns[col.name] = null; // using an object as a unique set
+      const cols = extendedTable && extendedTable.columns || [];
+      cols.forEach((col) => {
+        columns[col.name] = null;  // using an object as a unique set
       });
-      return {
-        name: t.label,
-        value: tableName,
-        score: TABLE_AUTOCOMPLETE_SCORE,
-        meta: 'table',
-      };
     });
-
-    const columnWords = Object.keys(columns).map(col => ({
-      name: col,
-      value: col,
-      score: COLUMN_AUTOCOMPLETE_SCORE,
-      meta: 'column',
-    }));
-
-    const functionWords = props.functionNames.map(func => ({
-      name: func,
-      value: func,
-      score: SQL_FUNCTIONS_AUTOCOMPLETE_SCORE,
-      meta: 'function',
-    }));
-
-    const words = schemaWords
-      .concat(tableWords)
-      .concat(columnWords)
-      .concat(functionWords)
-      .concat(sqlKeywords);
-
+    words = words.concat(Object.keys(columns).map(col => (
+      { name: col, value: col, score: 50, meta: 'column' }
+    )), sqlWords);
     this.setState({ words }, () => {
       const completer = {
         getCompletions: this.getCompletions.bind(this),
@@ -214,7 +178,7 @@ class AceEditorWrapper extends React.PureComponent {
   }
   getAceAnnotations() {
     const validationResult = this.props.queryEditor.validationResult;
-    const resultIsReady = validationResult && validationResult.completed;
+    const resultIsReady = (validationResult && validationResult.completed);
     if (resultIsReady && validationResult.errors.length > 0) {
       const errors = validationResult.errors.map(err => ({
         type: 'error',

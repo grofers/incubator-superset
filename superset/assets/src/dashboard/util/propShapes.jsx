@@ -24,7 +24,6 @@ import headerStyleOptions from './headerStyleOptions';
 export const componentShape = PropTypes.shape({
   id: PropTypes.string.isRequired,
   type: PropTypes.oneOf(Object.values(componentTypes)).isRequired,
-  parents: PropTypes.arrayOf(PropTypes.string),
   children: PropTypes.arrayOf(PropTypes.string),
   meta: PropTypes.shape({
     // Dimensions
@@ -36,9 +35,6 @@ export const componentShape = PropTypes.shape({
 
     // Row
     background: PropTypes.oneOf(backgroundStyleOptions.map(opt => opt.value)),
-
-    // Chart
-    chartId: PropTypes.number,
   }),
 });
 
@@ -80,20 +76,8 @@ export const filterIndicatorPropShape = PropTypes.shape({
   isInstantFilter: PropTypes.bool.isRequired,
   label: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
+  scope: PropTypes.string.isRequired,
   values: PropTypes.array.isRequired,
-});
-
-export const dashboardFilterPropShape = PropTypes.shape({
-  chartId: PropTypes.number.isRequired,
-  componentId: PropTypes.string.isRequired,
-  filterName: PropTypes.string.isRequired,
-  datasourceId: PropTypes.string.isRequired,
-  directPathToFilter: PropTypes.arrayOf(PropTypes.string).isRequired,
-  isDateFilter: PropTypes.bool.isRequired,
-  isInstantFilter: PropTypes.bool.isRequired,
-  columns: PropTypes.object,
-  labels: PropTypes.object,
-  scopes: PropTypes.object,
 });
 
 export const dashboardStatePropShape = PropTypes.shape({
@@ -118,26 +102,15 @@ export const dashboardInfoPropShape = PropTypes.shape({
   userId: PropTypes.string.isRequired,
 });
 
-/* eslint-disable-next-line  no-undef */
-const lazyFunction = f => () => f().apply(this, arguments);
-
-const leafType = PropTypes.shape({
-  value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  label: PropTypes.string.isRequired,
-});
-
-const parentShape = {
-  value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  label: PropTypes.string.isRequired,
-  children: PropTypes.arrayOf(
-    PropTypes.oneOfType([
-      PropTypes.shape(lazyFunction(() => parentShape)),
-      leafType,
-    ]),
-  ),
-};
-
-export const filterScopeSelectorTreeNodePropShape = PropTypes.oneOfType([
-  PropTypes.shape(parentShape),
-  leafType,
-]);
+export const loadStatsPropShape = PropTypes.objectOf(
+  PropTypes.shape({
+    didLoad: PropTypes.bool.isRequired,
+    minQueryStartTime: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    parent_id: PropTypes.string,
+    parent_type: PropTypes.string,
+    index: PropTypes.number.isRequired,
+    slice_ids: PropTypes.arrayOf(PropTypes.number).isRequired,
+  }),
+);

@@ -27,10 +27,7 @@ import VirtualizedRendererWrap from '../../../../src/components/VirtualizedRende
 import SelectControl from '../../../../src/explore/components/controls/SelectControl';
 
 const defaultProps = {
-  choices: [
-    ['1 year ago', '1 year ago'],
-    ['today', 'today'],
-  ],
+  choices: [['1 year ago', '1 year ago'], ['today', 'today']],
   name: 'row_limit',
   label: 'Row Limit',
   valueKey: 'value', // shallow isn't passing SelectControl.defaultProps.valueKey through
@@ -118,11 +115,8 @@ describe('SelectControl', () => {
         valueKey: 'value',
       };
       wrapper.setProps(selectAllProps);
-      expect(wrapper.instance().getOptions(selectAllProps)).toContainEqual({
-        label: 'Select All',
-        meta: true,
-        value: 'Select All',
-      });
+      expect(wrapper.instance().getOptions(selectAllProps))
+        .toContainEqual({ label: 'Select All', meta: true, value: 'Select All' });
     });
 
     it('returns the correct options when freeform is set to true', () => {
@@ -151,10 +145,7 @@ describe('SelectControl', () => {
         { value: 'four', label: 'four' },
       ];
       const newProps = {
-        choices: [
-          ['three', 'three'],
-          ['four', 'four'],
-        ],
+        choices: [['three', 'three'], ['four', 'four']],
         name: 'name',
         freeForm: false,
         value: null,

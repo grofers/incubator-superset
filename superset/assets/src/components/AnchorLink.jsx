@@ -40,6 +40,7 @@ const defaultProps = {
 };
 
 class AnchorLink extends React.PureComponent {
+
   componentDidMount() {
     const hash = getLocationHash();
     const { anchorLinkId } = this.props;
@@ -70,26 +71,23 @@ class AnchorLink extends React.PureComponent {
   }
 
   render() {
-    const {
-      anchorLinkId,
-      filters,
-      showShortLinkButton,
-      placement,
-    } = this.props;
+    const { anchorLinkId, filters, showShortLinkButton, placement } = this.props;
     return (
-      <span className="anchor-link-container" id={anchorLinkId}>
-        {showShortLinkButton && (
-          <URLShortLinkButton
-            url={getDashboardUrl(
-              window.location.pathname,
-              filters,
-              anchorLinkId,
-            )}
-            emailSubject={t('Superset Chart')}
-            emailContent={t('Check out this chart in dashboard:')}
-            placement={placement}
-          />
-        )}
+      <span
+        className="anchor-link-container"
+        id={anchorLinkId}
+      >
+        {showShortLinkButton &&
+        <URLShortLinkButton
+          url={getDashboardUrl(
+            window.location.pathname,
+            filters,
+            anchorLinkId,
+          )}
+          emailSubject={t('Superset Chart')}
+          emailContent={t('Check out this chart in dashboard:')}
+          placement={placement}
+        />}
       </span>
     );
   }

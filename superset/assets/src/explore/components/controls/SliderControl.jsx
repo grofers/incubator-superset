@@ -24,7 +24,10 @@ import ControlHeader from '../ControlHeader';
 
 const propTypes = {
   onChange: PropTypes.func,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
 };
 
 const defaultProps = {
@@ -38,7 +41,7 @@ export default function SliderControl(props) {
       <ControlHeader {...props} />
       <BootstrapSliderWrapper
         {...props}
-        change={obj => {
+        change={(obj) => {
           props.onChange(obj.target.value);
         }}
       />

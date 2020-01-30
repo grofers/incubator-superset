@@ -54,12 +54,9 @@ describe('ShareSqlLabQuery', () => {
   };
 
   function setup(overrideProps) {
-    const wrapper = shallow(
-      <ShareSqlLabQuery {...defaultProps} {...overrideProps} />,
-      {
-        context: { store },
-      },
-    ).dive(); // wrapped in withToasts HOC
+    const wrapper = shallow(<ShareSqlLabQuery {...defaultProps} {...overrideProps} />, {
+      context: { store },
+    }).dive(); // wrapped in withToasts HOC
 
     return wrapper;
   }
@@ -83,9 +80,7 @@ describe('ShareSqlLabQuery', () => {
     return instance.getCopyUrl().then(() => {
       expect(storeQuerySpy.mock.calls).toHaveLength(1);
       expect(fetchMock.calls(storeQueryUrl)).toHaveLength(1);
-      expect(storeQuerySpy.mock.calls[0][0]).toMatchObject(
-        defaultProps.queryEditor,
-      );
+      expect(storeQuerySpy.mock.calls[0][0]).toMatchObject(defaultProps.queryEditor);
       expect(instance.state.shortUrl).toContain(storeQueryMockId);
 
       return Promise.resolve();

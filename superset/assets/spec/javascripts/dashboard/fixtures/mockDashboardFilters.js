@@ -17,7 +17,6 @@
  * under the License.
  */
 import { filterId } from './mockSliceEntities';
-import { DASHBOARD_FILTER_SCOPE_GLOBAL } from '../../../../src/dashboard/reducers/dashboardFilters';
 
 export const emptyFilters = {};
 
@@ -34,10 +33,7 @@ export const dashboardFilters = {
       'ROW-l6PrlhwSjh',
       'CHART-rwDfbGqeEn',
     ],
-    scopes: {
-      region: DASHBOARD_FILTER_SCOPE_GLOBAL,
-      gender: DASHBOARD_FILTER_SCOPE_GLOBAL,
-    },
+    scope: 'ROOT_ID',
     isDateFilter: false,
     isInstantFilter: true,
     columns: {

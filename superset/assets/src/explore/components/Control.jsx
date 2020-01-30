@@ -19,7 +19,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import './Control.less';
+import './Control.css';
 import controlMap from './controls';
 
 const controlTypes = Object.keys(controlMap);

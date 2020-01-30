@@ -45,12 +45,10 @@ export default function VirtualizedRendererWrap(renderer) {
     if (option.className) {
       className.push(option.className);
     }
-    const events = option.disabled
-      ? {}
-      : {
-          onClick: () => selectValue(option),
-          onMouseEnter: () => focusOption(option),
-        };
+    const events = option.disabled ? {} : {
+      onClick: () => selectValue(option),
+      onMouseEnter: () => focusOption(option),
+    };
     return (
       <div
         className={className.join(' ')}

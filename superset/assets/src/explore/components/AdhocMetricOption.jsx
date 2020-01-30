@@ -39,7 +39,7 @@ export default class AdhocMetricOption extends React.PureComponent {
     this.onOverlayEntered = this.onOverlayEntered.bind(this);
     this.onOverlayExited = this.onOverlayExited.bind(this);
     this.onPopoverResize = this.onPopoverResize.bind(this);
-    this.state = { overlayShown: false };
+    this.state = { overlayShown: !this.props.adhocMetric.fromFormData };
   }
 
   onPopoverResize() {
@@ -47,7 +47,7 @@ export default class AdhocMetricOption extends React.PureComponent {
   }
 
   onOverlayEntered() {
-    this.setState({ overlayShown: false });
+    this.setState({ overlayShown: true });
   }
 
   onOverlayExited() {
@@ -85,17 +85,13 @@ export default class AdhocMetricOption extends React.PureComponent {
         onExited={this.onOverlayExited}
       >
         <Label style={{ margin: this.props.multi ? 0 : 3, cursor: 'pointer' }}>
-          <div
-            onMouseDownCapture={e => {
-              e.stopPropagation();
-            }}
-          >
+          <div onMouseDownCapture={(e) => { e.stopPropagation(); }}>
             <span className="m-r-5 option-label">
               {adhocMetric.label}
               <i
-                className={`glyphicon glyphicon-triangle-${
-                  this.state.overlayShown ? 'left' : 'right'
-                } adhoc-label-arrow`}
+                className={
+                  `glyphicon glyphicon-triangle-${this.state.overlayShown ? 'left' : 'right'} adhoc-label-arrow`
+                }
               />
             </span>
           </div>

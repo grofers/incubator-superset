@@ -21,16 +21,19 @@ import { mount } from 'enzyme';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import fetchMock from 'fetch-mock';
+import { Table } from 'reactable-arc';
 
-import ListView from 'src/components/ListView/ListView';
-import DashboardTable from 'src/welcome/DashboardTable';
+import DashboardTable from '../../../src/welcome/DashboardTable';
+import Loading from '../../../src/components/Loading';
 
-// store needed for withToasts(DashboardTable)
+// store needed for withToasts(TableLoader)
 const mockStore = configureStore([thunk]);
 const store = mockStore({});
 
-const dashboardsEndpoint = 'glob:*/api/v1/dashboard/*';
-const mockDashboards = [{ id: 1, url: 'url', dashboard_title: 'title' }];
+const dashboardsEndpoint = 'glob:*/dashboardasync/api/read*';
+const mockDashboards = [
+  { id: 1, url: 'url', dashboard_title: 'title' },
+];
 
 fetchMock.get(dashboardsEndpoint, { result: mockDashboards });
 
@@ -42,7 +45,12 @@ function setup() {
 describe('DashboardTable', () => {
   beforeEach(fetchMock.resetHistory);
 
-  it('fetches dashboards and renders a ListView', done => {
+  it('renders a Loading initially', () => {
+    const wrapper = setup();
+    expect(wrapper.find(Loading)).toHaveLength(1);
+  });
+
+  it('fetches dashboards and renders a Table', (done) => {
     const wrapper = setup();
 
     setTimeout(() => {
@@ -50,7 +58,7 @@ describe('DashboardTable', () => {
       // there's a delay between response and updating state, so manually set it
       // rather than adding a timeout which could introduce flakiness
       wrapper.setState({ dashaboards: mockDashboards });
-      expect(wrapper.find(ListView)).toHaveLength(1);
+      expect(wrapper.find(Table)).toHaveLength(1);
       done();
     });
   });

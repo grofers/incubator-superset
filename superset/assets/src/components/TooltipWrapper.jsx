@@ -32,12 +32,7 @@ const defaultProps = {
   placement: 'top',
 };
 
-export default function TooltipWrapper({
-  label,
-  tooltip,
-  children,
-  placement,
-}) {
+export default function TooltipWrapper({ label, tooltip, children, placement }) {
   return (
     <OverlayTrigger
       placement={placement}

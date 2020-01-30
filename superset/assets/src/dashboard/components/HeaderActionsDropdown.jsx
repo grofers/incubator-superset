@@ -29,7 +29,6 @@ import injectCustomCss from '../util/injectCustomCss';
 import { SAVE_TYPE_NEWDASHBOARD } from '../util/constants';
 import URLShortLinkModal from '../../components/URLShortLinkModal';
 import getDashboardUrl from '../util/getDashboardUrl';
-import { getActiveFilters } from '../util/activeDashboardFilters';
 
 const propTypes = {
   addSuccessToast: PropTypes.func.isRequired,
@@ -51,9 +50,9 @@ const propTypes = {
   userCanSave: PropTypes.bool.isRequired,
   isLoading: PropTypes.bool.isRequired,
   layout: PropTypes.object.isRequired,
+  filters: PropTypes.object.isRequired,
   expandedSlices: PropTypes.object.isRequired,
   onSave: PropTypes.func.isRequired,
-  showPropertiesModal: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -121,6 +120,7 @@ class HeaderActionsDropdown extends React.PureComponent {
       colorScheme,
       hasUnsavedChanges,
       layout,
+      filters,
       expandedSlices,
       onSave,
       userCanEdit,
@@ -148,6 +148,7 @@ class HeaderActionsDropdown extends React.PureComponent {
             dashboardTitle={dashboardTitle}
             saveType={SAVE_TYPE_NEWDASHBOARD}
             layout={layout}
+            filters={filters}
             expandedSlices={expandedSlices}
             refreshFrequency={refreshFrequency}
             css={css}
@@ -191,15 +192,15 @@ class HeaderActionsDropdown extends React.PureComponent {
         />
 
         {editMode && (
-          <MenuItem onClick={this.props.showPropertiesModal}>
-            {t('Edit dashboard properties')}
+          <MenuItem target="_blank" href={`/dashboard/edit/${dashboardId}`}>
+            {t('Edit dashboard metadata')}
           </MenuItem>
         )}
 
         <URLShortLinkModal
           url={getDashboardUrl(
             window.location.pathname,
-            getActiveFilters(),
+            this.props.filters,
             window.location.hash,
           )}
           emailSubject={emailSubject}

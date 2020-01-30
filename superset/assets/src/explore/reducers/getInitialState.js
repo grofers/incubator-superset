@@ -70,8 +70,6 @@ export default function getInitialState(bootstrapData) {
     },
     explore: bootstrappedState,
     impressionId: shortid.generate(),
-    messageToasts: getToastsFromPyFlashMessages(
-      (bootstrapData.common || {}).flash_messages || [],
-    ),
+    messageToasts: getToastsFromPyFlashMessages((bootstrapData.common || {}).flash_messages || []),
   };
 }

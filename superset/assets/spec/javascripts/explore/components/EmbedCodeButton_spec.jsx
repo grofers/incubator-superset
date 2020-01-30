@@ -30,9 +30,7 @@ describe('EmbedCodeButton', () => {
   };
 
   it('renders', () => {
-    expect(React.isValidElement(<EmbedCodeButton {...defaultProps} />)).toBe(
-      true,
-    );
+    expect(React.isValidElement(<EmbedCodeButton {...defaultProps} />)).toBe(true);
   });
 
   it('renders overlay trigger', () => {
@@ -41,15 +39,13 @@ describe('EmbedCodeButton', () => {
   });
 
   it('returns correct embed code', () => {
-    const stub = sinon
-      .stub(exploreUtils, 'getExploreLongUrl')
-      .callsFake(() => 'endpoint_url');
+    const stub = sinon.stub(exploreUtils, 'getExploreLongUrl').callsFake(() => ('endpoint_url'));
     const wrapper = mount(<EmbedCodeButton {...defaultProps} />);
     wrapper.setState({
       height: '1000',
       width: '2000',
     });
-    const embedHTML =
+    const embedHTML = (
       '<iframe\n' +
       '  width="2000"\n' +
       '  height="1000"\n' +
@@ -58,7 +54,8 @@ describe('EmbedCodeButton', () => {
       '  scrolling="no"\n' +
       '  src="http://localhostendpoint_url&height=1000"\n' +
       '>\n' +
-      '</iframe>';
+      '</iframe>'
+    );
     expect(wrapper.instance().generateEmbedHTML()).toBe(embedHTML);
     stub.restore();
   });

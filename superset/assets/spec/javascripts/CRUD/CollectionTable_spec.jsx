@@ -28,6 +28,7 @@ const props = {
 };
 
 describe('CollectionTable', () => {
+
   let wrapper;
   let el;
 
@@ -45,4 +46,5 @@ describe('CollectionTable', () => {
     expect(wrapper.find('table')).toHaveLength(1);
     expect(wrapper.find('tbody tr.row')).toHaveLength(length);
   });
+
 });

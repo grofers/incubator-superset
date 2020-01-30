@@ -32,7 +32,9 @@ const defaultProps = {
 
 function FormattedNumber({ num, format }) {
   if (format) {
-    return <span title={num}>{formatNumber(format, num)}</span>;
+    return (
+      <span title={num}>{formatNumber(format, num)}</span>
+    );
   }
   return <span>{num}</span>;
 }

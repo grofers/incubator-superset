@@ -42,7 +42,9 @@ export default {
     {
       label: t('Grid'),
       expanded: true,
-      controlSetRows: [['grid_size', 'color_picker']],
+      controlSetRows: [
+        ['grid_size', 'color_picker'],
+      ],
     },
     {
       label: t('Advanced'),

@@ -55,4 +55,5 @@ describe('FormRow', () => {
     expect(wrapper.find(Row)).toHaveLength(1);
     expect(wrapper.find(Col)).toHaveLength(2);
   });
+
 });

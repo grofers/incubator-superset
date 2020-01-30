@@ -30,8 +30,6 @@ import {
   LOG_ACTIONS_EXPORT_CSV_DASHBOARD_CHART,
   LOG_ACTIONS_FORCE_REFRESH_CHART,
 } from '../../../logger/LogUtils';
-import { isFilterBox } from '../../util/activeDashboardFilters';
-import getFilterValuesByFilterId from '../../util/getFilterValuesByFilterId';
 
 const propTypes = {
   id: PropTypes.number.isRequired,
@@ -48,7 +46,6 @@ const propTypes = {
   slice: slicePropShape.isRequired,
   sliceName: PropTypes.string.isRequired,
   timeout: PropTypes.number.isRequired,
-  // all active filter fields in dashboard
   filters: PropTypes.object.isRequired,
   refreshChart: PropTypes.func.isRequired,
   logEvent: PropTypes.func.isRequired,
@@ -241,12 +238,6 @@ class Chart extends React.Component {
     const isCached = queryResponse && queryResponse.is_cached;
     const cachedDttm = queryResponse && queryResponse.cached_dttm;
     const isOverflowable = OVERFLOWABLE_VIZ_TYPES.has(slice.viz_type);
-    const initialValues = isFilterBox(id)
-      ? getFilterValuesByFilterId({
-          activeFilters: filters,
-          filterId: id,
-        })
-      : {};
 
     return (
       <div>
@@ -306,7 +297,7 @@ class Chart extends React.Component {
             chartId={id}
             chartStatus={chart.chartStatus}
             datasource={datasource}
-            initialValues={initialValues}
+            initialValues={filters[id]}
             formData={formData}
             queryResponse={chart.queryResponse}
             timeout={timeout}

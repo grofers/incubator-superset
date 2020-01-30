@@ -21,11 +21,7 @@ import { SupersetClient } from '@superset-ui/connection';
 
 import { isEqual } from 'lodash';
 
-export default function withVerification(
-  WrappedComponent,
-  optionLabel,
-  optionsName,
-) {
+export default function withVerification(WrappedComponent, optionLabel, optionsName) {
   /*
    * This function will verify control options before passing them to the control by calling an
    * endpoint on mount and when the controlValues change. controlValues should be set in
@@ -48,10 +44,7 @@ export default function withVerification(
 
     componentDidUpdate(prevProps) {
       const { hasRunVerification } = this.state;
-      if (
-        !isEqual(this.props.controlValues, prevProps.controlValues) ||
-        !hasRunVerification
-      ) {
+      if (!isEqual(this.props.controlValues, prevProps.controlValues) || !hasRunVerification) {
         this.getValidOptions();
       }
     }
@@ -61,13 +54,11 @@ export default function withVerification(
       if (endpoint) {
         SupersetClient.get({
           endpoint,
-        })
-          .then(({ json }) => {
-            if (Array.isArray(json)) {
-              this.setState({ validOptions: new Set(json) || new Set() });
-            }
-          })
-          .catch(error => console.log(error));
+        }).then(({ json }) => {
+          if (Array.isArray(json)) {
+            this.setState({ validOptions: new Set(json) || new Set() });
+          }
+        }).catch(error => console.log(error));
 
         if (!this.state.hasRunVerification) {
           this.setState({ hasRunVerification: true });
@@ -78,15 +69,20 @@ export default function withVerification(
     render() {
       const { validOptions } = this.state;
       const options = this.props[optionsName];
-      const verifiedOptions = validOptions
-        ? options.filter(o => validOptions.has(o[optionLabel]))
-        : options;
+      const verifiedOptions = validOptions ?
+        options.filter(o => (validOptions.has(o[optionLabel]))) :
+        options;
 
       const newProps = { ...this.props, [optionsName]: verifiedOptions };
 
-      return <WrappedComponent {...newProps} />;
+      return (
+        <WrappedComponent
+          {...newProps}
+        />
+      );
     }
   }
   withVerificationComponent.propTypes = WrappedComponent.propTypes;
   return withVerificationComponent;
 }
+

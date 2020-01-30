@@ -37,13 +37,12 @@ const propTypes = {
   queries: PropTypes.array,
   onUserClicked: PropTypes.func,
   onDbClicked: PropTypes.func,
-  displayLimit: PropTypes.number.isRequired,
 };
 const defaultProps = {
   columns: ['started', 'duration', 'rows'],
   queries: [],
-  onUserClicked: () => {},
-  onDbClicked: () => {},
+  onUserClicked: () => { },
+  onDbClicked: () => { },
 };
 
 class QueryTable extends React.PureComponent {
@@ -80,10 +79,10 @@ class QueryTable extends React.PureComponent {
   }
 
   openQueryInNewTab(query) {
-    this.props.actions.cloneQueryToNewTab(query, true);
+    this.props.actions.cloneQueryToNewTab(query);
   }
-  openAsyncResults(query, displayLimit) {
-    this.props.actions.fetchQueryResults(query, displayLimit);
+  openAsyncResults(query) {
+    this.props.actions.fetchQueryResults(query);
   }
   clearQueryResults(query) {
     this.props.actions.clearQueryResults(query);
@@ -93,7 +92,7 @@ class QueryTable extends React.PureComponent {
   }
   render() {
     const data = this.props.queries
-      .map(query => {
+      .map((query) => {
         const q = Object.assign({}, query);
         if (q.endDttm) {
           q.duration = fDuration(q.startDttm, q.endDttm);
@@ -138,12 +137,7 @@ class QueryTable extends React.PureComponent {
         );
         q.sql = (
           <Well>
-            <HighlightedSql
-              sql={q.sql}
-              rawSql={q.executedSql}
-              shrink
-              maxWidth={60}
-            />
+            <HighlightedSql sql={q.sql} rawSql={q.executedSql} shrink maxWidth={60} />
           </Well>
         );
         if (q.resultsKey) {
@@ -157,28 +151,17 @@ class QueryTable extends React.PureComponent {
                 </Label>
               }
               modalTitle={t('Data preview')}
-              beforeOpen={this.openAsyncResults.bind(
-                this,
-                query,
-                this.props.displayLimit,
-              )}
+              beforeOpen={this.openAsyncResults.bind(this, query)}
               onExit={this.clearQueryResults.bind(this, query)}
               modalBody={
-                <ResultSet
-                  showSql
-                  query={query}
-                  actions={this.props.actions}
-                  height={400}
-                  displayLimit={this.props.displayLimit}
-                />
+                <ResultSet showSql query={query} actions={this.props.actions} height={400} />
               }
             />
           );
         } else {
           // if query was run using ctas and force_ctas_schema was set
           // tempTable will have the schema
-          const schemaUsed =
-            q.ctas && q.tempTable && q.tempTable.includes('.') ? '' : q.schema;
+          const schemaUsed = q.ctas && q.tempTable && q.tempTable.includes('.') ? '' : q.schema;
           q.output = [schemaUsed, q.tempTable].filter(v => v).join('.');
         }
         q.progress = (
@@ -208,9 +191,7 @@ class QueryTable extends React.PureComponent {
             <Link
               className="fa fa-pencil m-r-3"
               onClick={this.restoreSql.bind(this, query)}
-              tooltip={t(
-                'Overwrite text in the editor with a query on this table',
-              )}
+              tooltip={t('Overwrite text in the editor with a query on this table')}
               placement="top"
             />
             <Link

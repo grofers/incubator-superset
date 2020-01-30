@@ -25,7 +25,11 @@ export default {
     {
       label: t('Query'),
       expanded: true,
-      controlSetRows: [['metric'], ['adhoc_filters'], ['freq']],
+      controlSetRows: [
+        ['metric'],
+        ['adhoc_filters'],
+        ['freq'],
+      ],
     },
     {
       label: t('Chart Options'),
@@ -60,14 +64,6 @@ export default {
     },
     metric: {
       clearable: false,
-    },
-  },
-  sectionOverrides: {
-    druidTimeSeries: {
-      controlSetRows: [['granularity', 'druid_time_origin'], ['time_range']],
-    },
-    sqlaTimeSeries: {
-      controlSetRows: [['granularity_sqla', 'time_grain_sqla'], ['time_range']],
     },
   },
 };

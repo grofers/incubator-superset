@@ -23,7 +23,11 @@ export default {
     {
       label: t('Query'),
       expanded: true,
-      controlSetRows: [['entity'], ['metric'], ['adhoc_filters']],
+      controlSetRows: [
+        ['entity'],
+        ['metric'],
+        ['adhoc_filters'],
+      ],
     },
     {
       label: t('Options'),
@@ -37,9 +41,7 @@ export default {
   controlOverrides: {
     entity: {
       label: t('ISO 3166-2 codes of region/province/department'),
-      description: t(
-        "It's ISO 3166-2 of your region/province/department in your table. (see documentation for list of ISO 3166-2)",
-      ),
+      description: t('It\'s ISO 3166-2 of your region/province/department in your table. (see documentation for list of ISO 3166-2)'),
     },
     metric: {
       label: t('Metric'),

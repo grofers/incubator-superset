@@ -40,16 +40,7 @@ export default {
     url: {
       description: t(
         "Templated link, it's possible to include {{ metric }} " +
-          'or other values coming from the controls.',
-      ),
-    },
-  },
-  sectionOverrides: {
-    druidTimeSeries: {
-      controlSetRows: [['granularity', 'druid_time_origin'], ['time_range']],
-    },
-    sqlaTimeSeries: {
-      controlSetRows: [['granularity_sqla', 'time_grain_sqla'], ['time_range']],
+        'or other values coming from the controls.'),
     },
   },
 };

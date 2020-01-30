@@ -33,11 +33,17 @@ export default {
     },
     {
       label: t('Points'),
-      controlSetRows: [['point_radius'], ['point_radius_unit']],
+      controlSetRows: [
+        ['point_radius'],
+        ['point_radius_unit'],
+      ],
     },
     {
       label: t('Labelling'),
-      controlSetRows: [['mapbox_label'], ['pandas_aggfunc']],
+      controlSetRows: [
+        ['mapbox_label'],
+        ['pandas_aggfunc'],
+      ],
     },
     {
       label: t('Visual Tweaks'),
@@ -68,23 +74,17 @@ export default {
     },
     pandas_aggfunc: {
       label: t('Cluster label aggregator'),
-      description: t(
-        'Aggregate function applied to the list of points ' +
-          'in each cluster to produce the cluster label.',
-      ),
+      description: t('Aggregate function applied to the list of points ' +
+        'in each cluster to produce the cluster label.'),
     },
     rich_tooltip: {
       label: t('Tooltip'),
-      description: t(
-        'Show a tooltip when hovering over points and clusters ' +
-          'describing the label',
-      ),
+      description: t('Show a tooltip when hovering over points and clusters ' +
+        'describing the label'),
     },
     groupby: {
-      description: t(
-        'One or many controls to group by. If grouping, latitude ' +
-          'and longitude columns must be present.',
-      ),
+      description: t('One or many controls to group by. If grouping, latitude ' +
+        'and longitude columns must be present.'),
     },
   },
 };

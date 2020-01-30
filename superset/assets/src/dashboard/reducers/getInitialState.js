@@ -22,10 +22,7 @@ import shortid from 'shortid';
 import { CategoricalColorNamespace } from '@superset-ui/color';
 
 import { chart } from '../../chart/chartReducer';
-import {
-  DASHBOARD_FILTER_SCOPE_GLOBAL,
-  dashboardFilter,
-} from './dashboardFilters';
+import { dashboardFilter } from './dashboardFilters';
 import { initSliceEntities } from './sliceEntities';
 import { getParam } from '../../modules/utils';
 import { applyDefaultFormData } from '../../explore/store';
@@ -50,7 +47,7 @@ import newComponentFactory from '../util/newComponentFactory';
 import { TIME_RANGE } from '../../visualizations/FilterBox/FilterBox';
 
 export default function(bootstrapData) {
-  const { user_id, datasources, common, editMode, urlParams } = bootstrapData;
+  const { user_id, datasources, common, editMode } = bootstrapData;
 
   const dashboard = { ...bootstrapData.dashboard_data };
   let preselectFilters = {};
@@ -101,11 +98,6 @@ export default function(bootstrapData) {
   let newSlicesContainer;
   let newSlicesContainerWidth = 0;
 
-  const filterImmuneSliceFields =
-    dashboard.metadata.filter_immune_slice_fields || {};
-  const filterImmuneSlices = dashboard.metadata.filter_immune_slices || [];
-  const filterScopes = dashboard.metadata.filter_scopes || {};
-
   const chartQueries = {};
   const dashboardFilters = {};
   const slices = {};
@@ -113,18 +105,11 @@ export default function(bootstrapData) {
   dashboard.slices.forEach(slice => {
     const key = slice.slice_id;
     if (['separator', 'markup'].indexOf(slice.form_data.viz_type) === -1) {
-      const form_data = {
-        ...slice.form_data,
-        url_params: {
-          ...slice.form_data.url_params,
-          ...urlParams,
-        },
-      };
       chartQueries[key] = {
         ...chart,
         id: key,
-        form_data,
-        formData: applyDefaultFormData(form_data),
+        form_data: slice.form_data,
+        formData: applyDefaultFormData(slice.form_data),
       };
 
       slices[key] = {
@@ -188,34 +173,6 @@ export default function(bootstrapData) {
           });
         }
 
-        // backward compatible:
-        // merge scoped filter settings with old global immune settings
-        const scopesByChartId = Object.keys(columns).reduce((map, column) => {
-          const scopeSettings = {
-            ...filterScopes[key],
-          };
-          const { scope, immune } = {
-            ...DASHBOARD_FILTER_SCOPE_GLOBAL,
-            ...scopeSettings[column],
-          };
-          const immuneChartIds = new Set(filterImmuneSlices);
-          Object.keys(filterImmuneSliceFields)
-            .filter(strChartId =>
-              filterImmuneSliceFields[strChartId].includes(column),
-            )
-            .forEach(strChartId => {
-              immuneChartIds.add(parseInt(strChartId, 10));
-            });
-
-          return {
-            ...map,
-            [column]: {
-              scope,
-              immune: [...immuneChartIds].concat(immune),
-            },
-          };
-        }, {});
-
         const componentId = chartIdToLayoutId[key];
         const directPathToFilter = (layout[componentId].parents || []).slice();
         directPathToFilter.push(componentId);
@@ -223,16 +180,15 @@ export default function(bootstrapData) {
           ...dashboardFilter,
           chartId: key,
           componentId,
-          datasourceId: slice.form_data.datasource,
-          filterName: slice.slice_name,
           directPathToFilter,
           columns,
           labels,
-          scopes: scopesByChartId,
           isInstantFilter: !!slice.form_data.instant_filtering,
           isDateFilter: Object.keys(columns).includes(TIME_RANGE),
         };
       }
+      buildActiveFilters(dashboardFilters);
+      buildFilterColorMap(dashboardFilters);
     }
 
     // sync layout names with current slice names in case a slice was edited
@@ -243,11 +199,6 @@ export default function(bootstrapData) {
       layout[layoutId].meta.sliceName = slice.slice_name;
     }
   });
-  buildActiveFilters({
-    dashboardFilters,
-    components: layout,
-  });
-  buildFilterColorMap(dashboardFilters, layout);
 
   // store the header as a layout component so we can undo/redo changes
   layout[DASHBOARD_HEADER_ID] = {
@@ -281,6 +232,9 @@ export default function(bootstrapData) {
       id: dashboard.id,
       slug: dashboard.slug,
       metadata: {
+        filterImmuneSliceFields:
+          dashboard.metadata.filter_immune_slice_fields || {},
+        filterImmuneSlices: dashboard.metadata.filter_immune_slices || [],
         timed_refresh_immune_slices:
           dashboard.metadata.timed_refresh_immune_slices,
       },

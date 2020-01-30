@@ -55,9 +55,7 @@ class URLShortLinkModal extends React.Component {
   }
 
   getCopyUrl() {
-    getShortUrl(this.props.url)
-      .then(this.onShortUrlSuccess)
-      .catch(this.props.addDangerToast);
+    getShortUrl(this.props.url).then(this.onShortUrlSuccess).catch(this.props.addDangerToast);
   }
 
   render() {
@@ -73,14 +71,10 @@ class URLShortLinkModal extends React.Component {
           <div>
             <CopyToClipboard
               text={this.state.shortUrl}
-              copyNode={
-                <i className="fa fa-clipboard" title={t('Copy to clipboard')} />
-              }
+              copyNode={<i className="fa fa-clipboard" title={t('Copy to clipboard')} />}
             />
             &nbsp;&nbsp;
-            <a
-              href={`mailto:?Subject=${this.props.emailSubject}%20&Body=${emailBody}`}
-            >
+            <a href={`mailto:?Subject=${this.props.emailSubject}%20&Body=${emailBody}`}>
               <i className="fa fa-envelope" />
             </a>
           </div>

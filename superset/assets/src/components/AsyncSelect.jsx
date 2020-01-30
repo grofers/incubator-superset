@@ -75,12 +75,11 @@ class AsyncSelect extends React.PureComponent {
           this.onChange(options[0]);
         }
       })
-      .catch(response =>
-        getClientErrorObject(response).then(error => {
-          this.props.onAsyncError(error.error || error.statusText || error);
-          this.setState({ isLoading: false });
-        }),
-      );
+      .catch(response => getClientErrorObject(response).then((error) => {
+        this.props.onAsyncError(error.error || error.statusText || error);
+        this.setState({ isLoading: false });
+      }),
+    );
   }
 
   render() {

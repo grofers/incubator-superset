@@ -23,18 +23,19 @@ import FilterIndicatorsContainer from '../components/FilterIndicatorsContainer';
 import { setDirectPathToChild } from '../actions/dashboardState';
 
 function mapStateToProps(
-  { datasources, dashboardState, dashboardFilters, dashboardLayout, charts },
+  { dashboardState, dashboardFilters, dashboardInfo, charts },
   ownProps,
 ) {
   const chartId = ownProps.chartId;
   const chartStatus = (charts[chartId] || {}).chartStatus;
 
   return {
-    datasources,
     dashboardFilters,
     chartId,
     chartStatus,
-    layout: dashboardLayout.present,
+    filterImmuneSlices: dashboardInfo.metadata.filterImmuneSlices || [],
+    filterImmuneSliceFields:
+      dashboardInfo.metadata.filterImmuneSliceFields || {},
     filterFieldOnFocus:
       dashboardState.focusedFilterField.length === 0
         ? {}

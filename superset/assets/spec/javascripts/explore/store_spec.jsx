@@ -16,27 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { getChartControlPanelRegistry } from '@superset-ui/chart';
 import { applyDefaultFormData } from '../../../src/explore/store';
 
 describe('store', () => {
-  beforeAll(() => {
-    getChartControlPanelRegistry().registerValue('test-chart', {
-      controlPanelSections: [
-        {
-          label: 'Test section',
-          expanded: true,
-          controlSetRows: [['row_limit']],
-        },
-      ],
-    });
-  });
-
-  afterAll(() => {
-    getChartControlPanelRegistry().remove('test-chart');
-  });
 
   describe('applyDefaultFormData', () => {
+
     window.featureFlags = {
       SCOPED_FILTER: false,
     };
@@ -44,7 +29,7 @@ describe('store', () => {
     it('applies default to formData if the key is missing', () => {
       const inputFormData = {
         datasource: '11_table',
-        viz_type: 'test-chart',
+        viz_type: 'table',
       };
       let outputFormData = applyDefaultFormData(inputFormData);
       expect(outputFormData.row_limit).toEqual(10000);
@@ -60,7 +45,7 @@ describe('store', () => {
     it('keeps null if key is defined with null', () => {
       const inputFormData = {
         datasource: '11_table',
-        viz_type: 'test-chart',
+        viz_type: 'table',
         row_limit: null,
       };
       const outputFormData = applyDefaultFormData(inputFormData);
@@ -76,5 +61,6 @@ describe('store', () => {
       const outputFormData = applyDefaultFormData(inputFormData);
       expect(outputFormData.this_should_no_be_here).toBe(undefined);
     });
+
   });
 });

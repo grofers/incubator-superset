@@ -17,7 +17,6 @@
  * under the License.
  */
 import { t } from '@superset-ui/translation';
-import { nonEmpty } from '../validators';
 
 export default {
   controlPanelSections: [
@@ -56,7 +55,6 @@ export default {
   controlOverrides: {
     groupby: {
       label: t('Series'),
-      validators: [nonEmpty],
     },
     columns: {
       label: t('Breakdowns'),

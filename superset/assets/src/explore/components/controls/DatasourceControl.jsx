@@ -36,8 +36,6 @@ import ColumnOption from '../../../components/ColumnOption';
 import MetricOption from '../../../components/MetricOption';
 import DatasourceModal from '../../../datasource/DatasourceModal';
 import ChangeDatasourceModal from '../../../datasource/ChangeDatasourceModal';
-import TooltipWrapper from '../../../components/TooltipWrapper';
-import './DatasourceControl.less';
 
 const propTypes = {
   onChange: PropTypes.func,
@@ -60,18 +58,14 @@ class DatasourceControl extends React.PureComponent {
       showChangeDatasourceModal: false,
       menuExpanded: false,
     };
-    this.toggleChangeDatasourceModal = this.toggleChangeDatasourceModal.bind(
-      this,
-    );
+    this.toggleChangeDatasourceModal = this.toggleChangeDatasourceModal.bind(this);
     this.toggleEditDatasourceModal = this.toggleEditDatasourceModal.bind(this);
     this.toggleShowDatasource = this.toggleShowDatasource.bind(this);
     this.renderDatasource = this.renderDatasource.bind(this);
   }
 
   toggleShowDatasource() {
-    this.setState(({ showDatasource }) => ({
-      showDatasource: !showDatasource,
-    }));
+    this.setState(({ showDatasource }) => ({ showDatasource: !showDatasource }));
   }
 
   toggleChangeDatasourceModal() {
@@ -121,40 +115,56 @@ class DatasourceControl extends React.PureComponent {
   }
 
   render() {
-    const { showChangeDatasourceModal, showEditDatasourceModal } = this.state;
+    const { menuExpanded, showChangeDatasourceModal, showEditDatasourceModal } = this.state;
     const { datasource, onChange, onDatasourceSave, value } = this.props;
     return (
       <div>
         <ControlHeader {...this.props} />
         <div className="btn-group label-dropdown">
-          <TooltipWrapper
-            label="change-datasource"
-            tooltip={t('Click to change the datasource')}
+          <OverlayTrigger
+            placement="right"
+            overlay={
+              <Tooltip id={'error-tooltip'}>{t('Click to edit the datasource')}</Tooltip>
+            }
           >
-            <DropdownButton
-              title={datasource.name}
-              className="label label-default label-btn m-r-5"
-              bsSize="sm"
-              id="datasource_menu"
+            <div className="btn-group">
+              <Label onClick={this.toggleEditDatasourceModal} className="label-btn-label">
+                {datasource.name}
+              </Label>
+            </div>
+          </OverlayTrigger>
+          <DropdownButton
+            noCaret
+            title={
+              <span>
+                <i className={`float-right expander fa fa-angle-${menuExpanded ? 'up' : 'down'}`} />
+              </span>}
+            className="label label-btn m-r-5"
+            bsSize="sm"
+            id="datasource_menu"
+          >
+            <MenuItem
+              eventKey="3"
+              onClick={this.toggleEditDatasourceModal}
             >
-              <MenuItem eventKey="3" onClick={this.toggleChangeDatasourceModal}>
-                {t('Change Datasource')}
-              </MenuItem>
-              {datasource.type === 'table' && (
-                <MenuItem
-                  eventKey="3"
-                  href={`/superset/sqllab?datasourceKey=${value}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {t('Explore in SQL Lab')}
-                </MenuItem>
-              )}
-              <MenuItem eventKey="3" onClick={this.toggleEditDatasourceModal}>
-                {t('Edit Datasource')}
-              </MenuItem>
-            </DropdownButton>
-          </TooltipWrapper>
+              {t('Edit Datasource')}
+            </MenuItem>
+            {datasource.type === 'table' &&
+              <MenuItem
+                eventKey="3"
+                href={`/superset/sqllab?datasourceKey=${value}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t('Explore in SQL Lab')}
+              </MenuItem>}
+            <MenuItem
+              eventKey="3"
+              onClick={this.toggleChangeDatasourceModal}
+            >
+              {t('Change Datasource')}
+            </MenuItem>
+          </DropdownButton>
           <OverlayTrigger
             placement="right"
             overlay={
@@ -165,17 +175,13 @@ class DatasourceControl extends React.PureComponent {
           >
             <a href="#">
               <i
-                className={`fa fa-${
-                  this.state.showDatasource ? 'minus' : 'plus'
-                }-square m-r-5 m-l-5 m-t-4`}
+                className={`fa fa-${this.state.showDatasource ? 'minus' : 'plus'}-square m-r-5 m-l-5 m-t-4`}
                 onClick={this.toggleShowDatasource}
               />
             </a>
           </OverlayTrigger>
         </div>
-        <Collapse in={this.state.showDatasource}>
-          {this.renderDatasource()}
-        </Collapse>
+        <Collapse in={this.state.showDatasource}>{this.renderDatasource()}</Collapse>
         <DatasourceModal
           datasource={datasource}
           show={showEditDatasourceModal}
